@@ -75,7 +75,7 @@ export default function HomeScreen() {
         </ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <Link href="/app">
+        <Link href="../(auth)/login">
           <Link.Trigger>
             <ThemedText type="subtitle">Step 4: Fuck off</ThemedText>
           </Link.Trigger>
