@@ -2,6 +2,8 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+const { append } = require("express/lib/response");
+const res = require("express/lib/response");
 
 const server = express();
 server.use(cors()); //för att kunna ta requests
@@ -28,7 +30,7 @@ db.connect((err)=>{
 
 
 function createUser(user){
-    const query = 'INSERT INTO users (first_name, last_name, email, gender) VALUES (?,?,?,?)'; 
+    const query = 'INSERT INTO users (user_id, first_name, last_name, email, gender) VALUES (?,?,?,?,?)'; 
     db.query(query, [user.first_name, user.last_name, user.email, user.gender], 
         (err, result)=>{
             if(err){
@@ -39,14 +41,17 @@ function createUser(user){
         } 
     );
 }
+server.post("/users/create", (req, res) =>{
+    createUser(req.body)
+    res.json({message: "user created"});
+    } 
+)
 
-createUser({
-  first_name: 'testnisse123',
-  last_name: 'Ulfsson',
-  email: 'ulfulfsson@ulfsson.com',
-  gender: 'AlphaMale'
-});
-
-
-
+// createUser({
+//   user_id:
+//   first_name: 'testnisse123',
+//   last_name: 'Ulfsson',
+//   email: 'ulfulfsson@ulfsson.com',
+//   gender: 'AlphaMale'
+// });
 
