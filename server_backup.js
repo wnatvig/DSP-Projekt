@@ -8,10 +8,10 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
-// koppla till databas
+//databas koppling
 const db = mysql.createConnection({
   host: 'localhost',
-  port: 3306,
+  port: 3306,   
   user: 'admin',
   password: 'evavonbahr123',
   database: 'unilink'
@@ -25,21 +25,22 @@ db.connect((err) => {
   console.log('Connected to database Unilink');
 });
 
+//posts
 
 app.post('/login', (req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
   res.json({ message: 'Login endpoint works!' });
 });
 
 app.post('/create_account', (req, res) => {
-  const { user_id, username, gender, bio } = req.body;
+  const { email, password, first_name, last_name, gender } = req.body;
 
-  if (!user_id || !username || !gender || !bio) {
+  if (!email || !first_name || !last_name || !gender) {
     return res.json({ success: false, message: 'Missing fields' });
   }
 
-  const query = 'INSERT INTO users (user_id, username, gender, bio) VALUES (?, ?, ?, ?)';
-  db.query(query, [user_id, username, gender, bio], (err, result) => {
+  const query = 'INSERT INTO users (first_name, last_name, email, gender) VALUES (?, ?, ?, ?)';
+  db.query(query, [first_name, last_name, email, gender], (err, result) => {
     if (err) {
       console.error('DB error:', err);
       return res.json({ success: false, message: err.message });
@@ -49,7 +50,7 @@ app.post('/create_account', (req, res) => {
   });
 });
 
-// startar server
+//starta grejen
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server running on port ${port}`);
 });
