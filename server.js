@@ -45,7 +45,7 @@ app.post('/create_account', (req, res) => {
       return res.json({ success: false, message: err.message });
     }
     console.log('User created:', result.insertId);
-    return res.json({ success: true, user_id: result.insertId });
+    return res.json({ success: true, user_id2: result.insertId });
   });
 });
 
