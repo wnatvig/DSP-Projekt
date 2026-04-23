@@ -1,9 +1,10 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { useAuth, useSignUp } from "@clerk/expo";
-import { type Href, Link, useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import React from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
+
 
 export default function Page() {
   const { signUp, errors, fetchStatus } = useSignUp();
@@ -33,34 +34,27 @@ export default function Page() {
     if (!error) await signUp.verifications.sendEmailCode();
   };
 
-  const handleVerify = async () => {
-    await signUp.verifications.verifyEmailCode({
-      code,
-    });
-    if (signUp.status === "complete") {
-      await signUp.finalize({
-        // Redirect the user to the home page after signing up
-        navigate: ({ session, decorateUrl }) => {
-          if (session?.currentTask) {
-            // Handle pending session tasks
-            // See https://clerk.com/docs/guides/development/custom-flows/authentication/session-tasks
-            console.log(session?.currentTask);
-            return;
-          }
+ const handleVerify = async () => {
+  const result = await signUp.verifications.verifyEmailCode({
+    code,
+  });
 
-          const url = decorateUrl("/");
-          if (url.startsWith("http")) {
-            window.location.href = url;
-          } else {
-            router.push(url as Href);
-          }
-        },
-      });
-    } else {
-      // Check why the sign-up is not complete
-      console.error("Sign-up attempt not complete:", signUp);
-    }
-  };
+  if (result.error) {
+    console.error(JSON.stringify(result.error, null, 2));
+    return;
+  }
+
+  if (signUp.status === "complete") {
+    await signUp.finalize({
+      navigate: () => {
+        router.push("/user_info");
+      },
+    });
+  } else {
+    console.error("Sign-up attempt not complete:", signUp.status);
+  }
+};
+
 
   if (signUp.status === "complete" || isSignedIn) {
     return null;
