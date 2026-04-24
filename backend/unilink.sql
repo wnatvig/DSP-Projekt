@@ -9,41 +9,41 @@ USE unilink;
 
 -- Har med allt som kommer från front end. 
 CREATE TABLE users (
-    user_id VARCHAR (255) NOT NULL PRIMARY KEY,
+    userId VARCHAR (255) NOT NULL PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,
     gender VARCHAR(100) NOT NULL,
     bio TEXT
 );
 
 CREATE TABLE courses (
-    course_id VARCHAR (50) NOT NULL PRIMARY KEY,
-    course_name VARCHAR (255) NOT NULL
+    courseId VARCHAR (50) NOT NULL PRIMARY KEY,
+    courseName VARCHAR (255) NOT NULL
 );
 
 CREATE TABLE events (
-    event_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id VARCHAR(255),
-    event_name VARCHAR(255) UNIQUE NOT NULL,
-    event_description TEXT NOT NULL,
-    event_date DATE NOT NULL,
-    event_image VARCHAR(255) NOT NULL,
-    event_location TEXT NOT NULL,
-    max_participants INT NOT NULL,
-    current_participants INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    eventId INT PRIMARY KEY AUTO_INCREMENT,
+    userId VARCHAR(255),
+    eventName VARCHAR(255) UNIQUE NOT NULL,
+    eventDescription TEXT NOT NULL,
+    eventDate DATE NOT NULL,
+    eventImage VARCHAR(255) NOT NULL,
+    eventLocation TEXT NOT NULL,
+    maxParticipants INT NOT NULL,
+    currentParticipants INT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES users(userId)
 );
 
-CREATE TABLE event_participants (
-    event_id INT NOT NULL,
-    user_id VARCHAR(255) NOT NULL,
-    PRIMARY KEY (event_id, user_id),
-    FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+CREATE TABLE eventParticipants (
+    eventId INT NOT NULL,
+    userId VARCHAR(255) NOT NULL,
+    PRIMARY KEY (eventId, userId),
+    FOREIGN KEY (eventId) REFERENCES events(eventId) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
 );
 
-CREATE FUNCTION full_name(first_name VARCHAR(100), last_name VARCHAR(100))
+CREATE FUNCTION fullName(firstName VARCHAR(100), lastName VARCHAR(100))
 RETURNS VARCHAR(200)
-RETURN CONCAT(first_name, ' ', last_name);
+RETURN CONCAT(firstName, ' ', lastName);
 
 -- TODO;
 -- Vi behöver skapa funktioner för att göra följande:
@@ -53,4 +53,3 @@ RETURN CONCAT(first_name, ' ', last_name);
 --  4. Ta bort användare från tabeller, se till att alla referenser (cascade borde lösa) försvinner samtidigt
 --  5. Göra lookup baserat på andra specifikationer som ID, namn, kön, etc...
 -- lägga till lösenord
-
