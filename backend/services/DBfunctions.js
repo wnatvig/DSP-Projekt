@@ -90,18 +90,37 @@ function removeEvent(event){
 }
 
 // För när man loggar in
-function getUser(user){
-
+async function getUser(user) {
+    const query = 'SELECT * FROM users WHERE userId = ?';
+    const result = await db.promise().query(query, [user.userId]);
+    return result[0][0];
 }
 
 // Behöver all information från event
-function getEvent(){
-
+async function getEvent(event) {
+    const query = 'SELECT * FROM events WHERE eventId = ?';
+    const result = await db.promise().query(query, [event.eventId]);
+    return result[0][0];
 }
+
+//Om vi vill returna evented med participants också
+// async function getEvent(event) {
+//     const eventQuery = 'SELECT * FROM events WHERE eventId = ?';
+//     const participantsQuery = 'SELECT * FROM eventParticipants WHERE eventId = ?';
+
+//     const eventResult = await db.promise().query(eventQuery, [event.eventId]);
+//     const participantsResult = await db.promise().query(participantsQuery, [event.eventId]);
+//     const eventData = eventResult[0][0];
+//     const participants = participantsResult[0];
+
+//     return {...eventData, participants};
+// }
 
 module.exports = {
     createEvent,
-    createUser
+    createUser,
+    getUser,
+    getEvent
 }
 
 
@@ -109,18 +128,22 @@ module.exports = {
 
 
 //TESTGREJER
-server.post("/users/create", (req, res) =>{
-    createUser(req.body)
-    res.json({message: "user created"});
-    } 
-)
+// server.post("/users/create", (req, res) =>{
+//     createUser(req.body)
+//     res.json({message: "user created"});
+//     } 
+// )
 
 createUser({
-  user_id: 'na3123oamodjsadji',
+  userId: 'na3123oamodjsadji',
   username: 'Ulfsson',
   gender: 'AlphaMale',
   bio: 'snel kile 14 år :)'
 });
+
+getUser({ userId: 'na3123oamodjsadji' })
+  .then(result => console.log('getUser result:', result))
+  .catch(err => console.error('getUser error:', err));
 
 // TODO;
 // Vi behöver skapa funktioner för att göra följande:
