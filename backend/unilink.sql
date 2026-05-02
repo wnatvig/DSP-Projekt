@@ -47,4 +47,7 @@ RETURN CONCAT(first_name, ' ', last_name);
 --  3. SELECT funktionen för att göra en "lookup" på en användare eller ett event
 --  4. Ta bort användare från tabeller, se till att alla referenser (cascade borde lösa) försvinner samtidigt
 --  5. Göra lookup baserat på andra specifikationer som ID, namn, kön, etc...
+--  6. implementera chattar
+
+
 
