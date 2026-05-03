@@ -83,69 +83,71 @@ async function leaveEvent(event, user){
     return result[0];
 }
 
-function removeUser(user){
+async function removeUser(user){
+    const con = await db.promise().getConnection();
+    try {
+        await con.beginTransaction();
+
+        await con.query('DELETE FROM events WHERE userId = ?', [user.userId]);
+
+        await con.query('DELETE FROM users WHERE userId = ?', [user.userId]);
+
+        await con.commit();
+        console.log('User removed:', user.userId);
+    } catch (err) {
+        await con.rollback();
+        throw err;
+    } finally {
+        con.release();
+    }
 
 }
 
-function removeEvent(event){
+async function removeEvent(event) {
+    const con = await db.promise().getConnection();
+    try {
+        await con.beginTransaction();
 
+        await con.query('DELETE FROM events WHERE eventId = ?', [event.eventId]);
+
+        await con.commit();
+        console.log('Event removed:', event.eventId);
+    } catch (err) {
+        await con.rollback();
+        throw err;
+    } finally {
+        con.release();
+    }
 }
 
-// För när man loggar in
 async function getUser(user) {
     const query = 'SELECT * FROM users WHERE userId = ?';
     const result = await db.promise().query(query, [user.userId]);
     return result[0][0];
 }
 
-// Behöver all information från event
 async function getEvent(event) {
     const query = 'SELECT * FROM events WHERE eventId = ?';
     const result = await db.promise().query(query, [event.eventId]);
     return result[0][0];
 }
 
-//Om vi vill returna evented med participants också
-// async function getEvent(event) {
-//     const eventQuery = 'SELECT * FROM events WHERE eventId = ?';
-//     const participantsQuery = 'SELECT * FROM eventParticipants WHERE eventId = ?';
-
-//     const eventResult = await db.promise().query(eventQuery, [event.eventId]);
-//     const participantsResult = await db.promise().query(participantsQuery, [event.eventId]);
-//     const eventData = eventResult[0][0];
-//     const participants = participantsResult[0];
-
-//     return {...eventData, participants};
-// }
+async function getEventParticipants(event) {
+    const participantsQuery = 'SELECT * FROM eventParticipants WHERE eventId = ?';
+    const participantsResult = await db.promise().query(participantsQuery, [event.eventId]);
+    const participants = participantsResult[0];
+    return {participants};
+}
 
 module.exports = {
     createEvent,
     createUser,
     getUser,
-    getEvent
+    getEvent,
+    removeEvent,
+    removeUser,
+    getEventParticipants
 }
-
-
-
-
-
-//TESTGREJER
-// server.post("/users/create", (req, res) =>{
-//     createUser(req.body)
-//     res.json({message: "user created"});
-//     } 
-// )
-
-createUser({
-  userId: 'na3123oamodjsadji',
-  username: 'Ulfsson',
-  gender: 'AlphaMale',
-  bio: 'snel kile 14 år :)'
-});
-
-getUser({ userId: 'na3123oamodjsadji' })
-  .then(result => console.log('getUser result:', result))
-  .catch(err => console.error('getUser error:', err));
 
 // TODO;
 // Vi behöver skapa funktioner för att göra följande:
