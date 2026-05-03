@@ -23,7 +23,7 @@ CREATE TABLE events (
     eventImage VARCHAR(255) NOT NULL,
     eventLocation TEXT NOT NULL,
     maxParticipants INT NOT NULL,
-    FOREIGN KEY (userId) REFERENCES users(userId)
+    FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
 );
 
 CREATE TABLE event_participants (
