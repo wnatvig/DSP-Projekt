@@ -182,7 +182,7 @@ export default function Page() {
         style={({ pressed }) => [
           styles.button,
           (!emailAddress || !password || fetchStatus === "fetching") &&
-          styles.buttonDisabled,
+            styles.buttonDisabled,
           pressed && styles.buttonPressed,
         ]}
         onPress={handleSubmit}

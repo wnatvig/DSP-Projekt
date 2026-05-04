@@ -7,17 +7,22 @@ import {
   StyleSheet,
   TextInput,
   View,
+  Platform,
 } from "react-native";
 import { Image } from "expo-image";
-import Dropdown from "../../components/dropdown_menu";
 import { router } from "expo-router";
 import { useAuth } from "@clerk/expo";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-export default function Create_Account() {
+export default function Create_Event() {
   const [message, setMessage] = useState("");
-  const [username, setusername] = useState("");
-  const [bio, setbio] = useState("");
-  const [Gender, setGender] = useState("Gender");
+  const [title, settitle] = useState("");
+  const [description, setdescription] = useState("");
+  const [place, setplace] = useState("");
+  const [participants, setparticipants] = useState("");
+  const [time, setTime] = useState<Date | null>(null);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+
   const { userId, isLoaded, isSignedIn } = useAuth();
 
   const create_account = async () => {
@@ -32,10 +37,11 @@ export default function Create_Account() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userId: userId,
-            username: username,
-            gender: Gender,
-            bio: bio,
+            title: title,
+            description: description,
+            time: time,
+            place: place,
+            participants: participants,
           }),
         },
       );
@@ -62,38 +68,73 @@ export default function Create_Account() {
         style={styles.headerLogo}
       />
 
-      <Text style={styles.label}>
-        Welcome to UNILINK, let's get to know you better!
-      </Text>
       <TextInput
-        placeholder="Name"
+        placeholder="title"
         placeholderTextColor={"#222"}
-        value={username}
-        onChangeText={setusername}
+        value={title}
+        onChangeText={settitle}
         style={globalStyles.textbox}
       />
 
-      <Dropdown
-        options={["Man", "Woman", "Other"]}
-        selectedValue={Gender}
-        onSelect={setGender}
+      <TextInput
+        placeholder="description"
+        placeholderTextColor={"#222"}
+        value={description}
+        onChangeText={setdescription}
+        style={globalStyles.textbox}
+      />
+
+      <Text style={styles.label}>Time</Text>
+
+      <Pressable style={styles.timeBox} onPress={() => setShowTimePicker(true)}>
+        <Text style={time ? styles.timeText : styles.placeholderText}>
+          {time
+            ? time.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : "Select time"}
+        </Text>
+      </Pressable>
+
+      {showTimePicker && (
+        <DateTimePicker
+          value={time || new Date()}
+          mode="time"
+          display="default"
+          is24Hour={true}
+          onChange={(event, selectedTime) => {
+            setShowTimePicker(false);
+
+            if (event.type === "set" && selectedTime) {
+              setTime(selectedTime);
+            }
+          }}
+        />
+      )}
+
+      <TextInput
+        placeholder="place"
+        placeholderTextColor={"#222"}
+        value={place}
+        onChangeText={setplace}
+        style={globalStyles.textbox}
+      />
+
+      <TextInput
+        placeholder="participants"
+        placeholderTextColor={"#222"}
+        value={participants}
+        onChangeText={setparticipants}
+        style={globalStyles.textbox}
       />
 
       <View style={styles.BioContainer}>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>Bio:</Text>
-          <TextInput
-            style={styles.BioInput}
-            placeholder="Write here..."
-            placeholderTextColor={"#222"}
-            multiline
-            numberOfLines={6}
-          />
-        </View>
+        <View style={styles.inputWrapper}></View>
       </View>
 
       <Pressable style={styles.button} onPress={create_account}>
-        <Text style={styles.buttonText}>Create account</Text>
+        <Text style={styles.buttonText}>Create event</Text>
       </Pressable>
     </View>
   );
@@ -165,5 +206,24 @@ const styles = StyleSheet.create({
   },
   inputWrapper: {
     width: "90%",
+  },
+  timeBox: {
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    justifyContent: "center",
+  },
+
+  timeText: {
+    fontSize: 15,
+    color: "#111",
+  },
+
+  placeholderText: {
+    fontSize: 15,
+    color: "#999",
   },
 });

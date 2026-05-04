@@ -16,13 +16,27 @@ export default function EventDetailPage() {
 
       <View style={styles.container}>
         <Pressable style={styles.backButton} onPress={() => router.back()}>
-          <Text style={styles.backButtonText}>← Tillbaka</Text>
+          <Text style={styles.backButtonText}>← Back</Text>
         </Pressable>
-
         <View style={styles.card}>
           <Text style={styles.cardTitle}>{title}</Text>
           <Text style={styles.cardText}>Tid: {time}</Text>
           <Text style={styles.cardText}>Plats: {place}</Text>
+
+          <Pressable
+            style={styles.chatButton}
+            onPress={() =>
+              router.push({
+                pathname: "/event/chat",
+                params: {
+                  eventId: id,
+                  title,
+                },
+              })
+            }
+          >
+            <Text style={styles.chatButtonText}>join</Text>
+          </Pressable>
         </View>
       </View>
     </>
@@ -62,5 +76,18 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 16,
     fontWeight: "600",
+  },
+  chatButton: {
+    marginTop: 16,
+    backgroundColor: "#111",
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+
+  chatButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "700",
   },
 });

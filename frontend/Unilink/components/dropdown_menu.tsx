@@ -1,20 +1,23 @@
-import { useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
-
+import { useState } from "react";
+import { View, Text, Pressable, StyleSheet } from "react-native";
 
 type DropdownProps = {
-    options: string[];
-    selectedValue: string;
-    onSelect: (value: string) => void;
-  };
+  options: string[];
+  selectedValue: string;
+  onSelect: (value: string) => void;
+};
 
-export default function Dropdown({ options, selectedValue, onSelect }: DropdownProps) {
+export default function Dropdown({
+  options,
+  selectedValue,
+  onSelect,
+}: DropdownProps) {
   const [open, setOpen] = useState(false);
 
   return (
     <View style={styles.container}>
       <Pressable onPress={() => setOpen(!open)} style={styles.selector}>
-        <Text>{selectedValue || 'Select option'}</Text>
+        <Text>{selectedValue || "Select option"}</Text>
       </Pressable>
 
       {open && (
@@ -43,17 +46,17 @@ const styles = StyleSheet.create({
   },
   selector: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 12,
     borderRadius: 8,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   dropdown: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     marginTop: 4,
     borderRadius: 8,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   option: {
     padding: 12,

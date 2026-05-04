@@ -5,7 +5,6 @@ import { Link, useRouter } from "expo-router";
 import React from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 
-
 export default function Page() {
   const { signUp, errors, fetchStatus } = useSignUp();
   const { isSignedIn } = useAuth();
@@ -34,27 +33,26 @@ export default function Page() {
     if (!error) await signUp.verifications.sendEmailCode();
   };
 
- const handleVerify = async () => {
-  const result = await signUp.verifications.verifyEmailCode({
-    code,
-  });
-
-  if (result.error) {
-    console.error(JSON.stringify(result.error, null, 2));
-    return;
-  }
-
-  if (signUp.status === "complete") {
-    await signUp.finalize({
-      navigate: () => {
-        router.push("/user_info");
-      },
+  const handleVerify = async () => {
+    const result = await signUp.verifications.verifyEmailCode({
+      code,
     });
-  } else {
-    console.error("Sign-up attempt not complete:", signUp.status);
-  }
-};
 
+    if (result.error) {
+      console.error(JSON.stringify(result.error, null, 2));
+      return;
+    }
+
+    if (signUp.status === "complete") {
+      await signUp.finalize({
+        navigate: () => {
+          router.push("/user_info");
+        },
+      });
+    } else {
+      console.error("Sign-up attempt not complete:", signUp.status);
+    }
+  };
 
   if (signUp.status === "complete" || isSignedIn) {
     return null;

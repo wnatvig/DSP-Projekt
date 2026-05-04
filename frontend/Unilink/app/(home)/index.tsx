@@ -68,7 +68,7 @@ export default function Page() {
 
         setEvents(data);
       } catch (error) {
-        setMessage("Kunde inte hämta event");
+        setMessage("No events found");
         console.log(error);
       }
     };
