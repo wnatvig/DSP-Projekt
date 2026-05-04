@@ -10,7 +10,10 @@ const db = mysql.createPool(
             port: 3306,
             user: 'frontend',
             password: 'evavonbahr123',
-            database: 'unilink',
+            database:
+            process.env.NODE_ENV === 'test'
+                ? 'unitest'
+                : 'unilink',
             waitForConnections: true,
             connectionLimit: 4,
             queueLimit:0
