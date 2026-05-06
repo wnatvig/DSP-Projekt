@@ -35,11 +35,11 @@ export default function EventDetailPage() {
             },
           }),
       },
-      { text: "Back to home",
+      {
+        text: "Back to home",
         onPress: () => router.push("/"),
         style: "cancel",
       },
-
     ]);
   };
 

@@ -8,6 +8,8 @@ import {
   TextInput,
   View,
   Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { Image } from "expo-image";
 import { router } from "expo-router";
@@ -62,81 +64,90 @@ export default function Create_Event() {
   };
 
   return (
-    <View style={globalStyles.container}>
-      <Image
-        source={require("@/assets/images/UniLinkLogo.png")}
-        style={styles.headerLogo}
-      />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={globalStyles.container}>
+        <View style={globalStyles.container}>
+          <Image
+            source={require("@/assets/images/UniLinkLogo.png")}
+            style={styles.headerLogo}
+          />
 
-      <TextInput
-        placeholder="title"
-        placeholderTextColor={"#222"}
-        value={title}
-        onChangeText={settitle}
-        style={globalStyles.textbox}
-      />
+          <TextInput
+            placeholder="Title"
+            placeholderTextColor={"#222"}
+            value={title}
+            onChangeText={settitle}
+            style={globalStyles.textbox}
+          />
 
-      <TextInput
-        placeholder="description"
-        placeholderTextColor={"#222"}
-        value={description}
-        onChangeText={setdescription}
-        style={globalStyles.textbox}
-      />
+          <TextInput
+            placeholder="Description"
+            placeholderTextColor={"#222"}
+            value={description}
+            onChangeText={setdescription}
+            style={globalStyles.textbox}
+          />
 
-      <Text style={styles.label}>Time</Text>
+          <Pressable
+            style={styles.timeBox}
+            onPress={() => setShowTimePicker(true)}
+          >
+            <Text style={time ? styles.timeText : styles.placeholderText}>
+              {time
+                ? time.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                : "Select time"}
+            </Text>
+          </Pressable>
 
-      <Pressable style={styles.timeBox} onPress={() => setShowTimePicker(true)}>
-        <Text style={time ? styles.timeText : styles.placeholderText}>
-          {time
-            ? time.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            : "Select time"}
-        </Text>
-      </Pressable>
+          {showTimePicker && (
+            <DateTimePicker
+              value={time || new Date()}
+              mode="time"
+              display="default"
+              is24Hour={true}
+              onChange={(event, selectedTime) => {
+                setShowTimePicker(false);
 
-      {showTimePicker && (
-        <DateTimePicker
-          value={time || new Date()}
-          mode="time"
-          display="default"
-          is24Hour={true}
-          onChange={(event, selectedTime) => {
-            setShowTimePicker(false);
+                if (event.type === "set" && selectedTime) {
+                  setTime(selectedTime);
+                }
+              }}
+            />
+          )}
 
-            if (event.type === "set" && selectedTime) {
-              setTime(selectedTime);
-            }
-          }}
-        />
-      )}
+          <TextInput
+            placeholder="Place"
+            placeholderTextColor={"#222"}
+            value={place}
+            onChangeText={setplace}
+            style={globalStyles.textbox}
+          />
+          <TextInput
+            value={participants}
+            onChangeText={(text) => {
+              const onlyNumbers = text.replace(/[^0-9]/g, "");
+              setparticipants(onlyNumbers.slice(0, 2));
+            }}
+            keyboardType="numeric"
+            placeholder="Participants"
+            placeholderTextColor={"#222"}
+            maxLength={2}
+            style={globalStyles.textbox}
+          />
 
-      <TextInput
-        placeholder="place"
-        placeholderTextColor={"#222"}
-        value={place}
-        onChangeText={setplace}
-        style={globalStyles.textbox}
-      />
+          <View style={styles.BioContainer}>
+            <View style={styles.inputWrapper}></View>
+          </View>
 
-      <TextInput
-        placeholder="participants"
-        placeholderTextColor={"#222"}
-        value={participants}
-        onChangeText={setparticipants}
-        style={globalStyles.textbox}
-      />
-
-      <View style={styles.BioContainer}>
-        <View style={styles.inputWrapper}></View>
+          <Pressable style={styles.button} onPress={create_account}>
+            <Text style={styles.buttonText}>Create event</Text>
+          </Pressable>
+        </View>
       </View>
-
-      <Pressable style={styles.button} onPress={create_account}>
-        <Text style={styles.buttonText}>Create event</Text>
-      </Pressable>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -165,8 +176,8 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     resizeMode: "contain",
-    marginBottom: 170,
-    marginTop: -120,
+    marginBottom: 30,
+    marginTop: -80,
     position: "relative",
   },
   titleContainer: {
@@ -212,9 +223,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 12,
-    paddingHorizontal: 14,
+    paddingHorizontal: 85,
     paddingVertical: 14,
     justifyContent: "center",
+    marginBottom: 10,
   },
 
   timeText: {

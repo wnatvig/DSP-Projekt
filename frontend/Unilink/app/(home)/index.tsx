@@ -2,12 +2,16 @@ import { Show, useUser, useClerk } from "@clerk/expo";
 import { useRouter, Link, Stack } from "expo-router";
 import { Text, View, Pressable, StyleSheet, ScrollView } from "react-native";
 import { useState, useEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 type EventItem = {
   id: number;
   title: string;
   time: string;
   place: string;
+  participants: string;
+  max: string;
+  photo: string;
 };
 
 export default function Page() {
@@ -15,7 +19,7 @@ export default function Page() {
   const { signOut } = useClerk();
   const router = useRouter();
 
-  //const [events, setEvents] = useState<EventItem[]>([])
+  // const [events, setEvents] = useState<EventItem[]>([])
 
   const [events, setEvents] = useState([
     {
@@ -32,30 +36,41 @@ export default function Page() {
 
   const [message, setMessage] = useState("");
 
+  const fetchEvent = async () => {
+    try {
+      const response = await fetch(
+        "http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events",
+      );
+
+      const data = await response.json();
+      setEvents(data);
+      setMessage("Events updated");
+    } catch (error) {
+      setMessage("server error");
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const fetchEvent = async () => {
-      try {
-        const response = await fetch(
-          "http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events",
-        );
-        const data = await response.json();
-
-        setEvents(data);
-      } catch (error) {
-        setMessage("No events found");
-        console.log(error);
-      }
-    };
-
     fetchEvent();
   }, []);
 
   return (
     <>
-      <Stack.Screen options={{ title: "Home" }} />
+      <Stack.Screen
+        options={{
+          title: "Home",
+          headerRight: () => (
+            <Pressable onPress={fetchEvent} style={{ marginRight: 15 }}>
+              <Ionicons name="refresh" size={24} color="black" />
+            </Pressable>
+          ),
+        }}
+      />
 
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>Welcome!</Text>
+        <Text style={styles.title}>Lets join an event!</Text>
 
         {message ? <Text>{message}</Text> : null}
 
@@ -88,7 +103,7 @@ export default function Page() {
             </Pressable>
           ))
         ) : (
-          <Text>Inga event ännu...</Text>
+          <Text>Inga events ännu...</Text>
         )}
 
         <Show when="signed-out">
@@ -101,7 +116,7 @@ export default function Page() {
         </Show>
 
         <Show when="signed-in">
-          <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
+          <Text>Signed in as {user?.emailAddresses[0].emailAddress}</Text>
           <Pressable style={styles.button} onPress={() => signOut()}>
             <Text style={styles.buttonText}>Sign out</Text>
           </Pressable>

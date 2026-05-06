@@ -99,8 +99,8 @@ export default function Layout() {
         onPress={() => router.push("/make-event")}
         style={{
           position: "absolute",
-          bottom: 100, // 👈 adjust this
-          right: 30,
+          bottom: 90, // 👈 adjust this
+          right: 160,
           width: 70,
           height: 70,
           borderRadius: 35,

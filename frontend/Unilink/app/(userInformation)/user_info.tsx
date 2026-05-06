@@ -7,6 +7,8 @@ import {
   StyleSheet,
   TextInput,
   View,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { Image } from "expo-image";
 import Dropdown from "../../components/dropdown_menu";
@@ -56,46 +58,49 @@ export default function Create_Account() {
   };
 
   return (
-    <View style={globalStyles.container}>
-      <Image
-        source={require("@/assets/images/UniLinkLogo.png")}
-        style={styles.headerLogo}
-      />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={globalStyles.container}></View>
+      <View style={globalStyles.container}>
+        <Image
+          source={require("@/assets/images/UniLinkLogo.png")}
+          style={styles.headerLogo}
+        />
 
-      <Text style={styles.label}>
-        Welcome to UNILINK, let's get to know you better!
-      </Text>
-      <TextInput
-        placeholder="Name"
-        placeholderTextColor={"#222"}
-        value={username}
-        onChangeText={setusername}
-        style={globalStyles.textbox}
-      />
+        <Text style={styles.label}>
+          Welcome to UNILINK, let's get to know you better!
+        </Text>
+        <TextInput
+          placeholder="Name"
+          placeholderTextColor={"#222"}
+          value={username}
+          onChangeText={setusername}
+          style={globalStyles.textbox}
+        />
 
-      <Dropdown
-        options={["Man", "Woman", "Other"]}
-        selectedValue={Gender}
-        onSelect={setGender}
-      />
+        <Dropdown
+          options={["Man", "Woman", "Other"]}
+          selectedValue={Gender}
+          onSelect={setGender}
+        />
 
-      <View style={styles.BioContainer}>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>Bio:</Text>
-          <TextInput
-            style={styles.BioInput}
-            placeholder="Write here..."
-            placeholderTextColor={"#222"}
-            multiline
-            numberOfLines={6}
-          />
+        <View style={styles.BioContainer}>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.label}>Bio:</Text>
+            <TextInput
+              style={styles.BioInput}
+              placeholder="Write here..."
+              placeholderTextColor={"#222"}
+              multiline
+              numberOfLines={6}
+            />
+          </View>
         </View>
-      </View>
 
-      <Pressable style={styles.button} onPress={create_account}>
-        <Text style={styles.buttonText}>Create account</Text>
-      </Pressable>
-    </View>
+        <Pressable style={styles.button} onPress={create_account}>
+          <Text style={styles.buttonText}>Create account</Text>
+        </Pressable>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
