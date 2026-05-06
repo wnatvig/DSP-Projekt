@@ -22,7 +22,7 @@ const ProfileScreen = () => {
   //const [user, setUser] = useState<User | null>(null);
 
   const [user, setUser] = useState<User | null>({
-    username: "hej",
+    username: "Viktor",
     gender: "male",
     languages: "Swedish, English",
     bio: "I love coding!",

@@ -46,7 +46,7 @@ export default function Page() {
     if (signUp.status === "complete") {
       await signUp.finalize({
         navigate: () => {
-          router.push("/user_info");
+          router.navigate("/user_info");
         },
       });
     } else {

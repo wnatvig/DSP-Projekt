@@ -23,36 +23,10 @@ export default function Page() {
       title: "Fysikplugg",
       time: "14:00",
       place: "Biblioteket",
-    },
-    {
-      id: 2,
-      title: "Gruppmöte",
-      time: "16:30",
-      place: "Sal B12",
-    },
-    {
-      id: 3,
-      title: "Gym",
-      time: "18:00",
-      place: "Friskis",
-    },
-    {
-      id: 4,
-      title: "Fysikplugg",
-      time: "14:00",
-      place: "Biblioteket",
-    },
-    {
-      id: 5,
-      title: "Gruppmöte",
-      time: "16:30",
-      place: "Sal B12",
-    },
-    {
-      id: 6,
-      title: "Gym",
-      time: "18:00",
-      place: "Friskis",
+      participants: "5",
+      max: "5",
+      photo:
+        "https://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/images/UniLinkLogo.png",
     },
   ]);
 
@@ -101,6 +75,9 @@ export default function Page() {
                     title: event.title,
                     time: event.time,
                     place: event.place,
+                    participants: event.participants,
+                    max: event.max,
+                    photo: event.photo,
                   },
                 })
               }

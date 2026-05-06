@@ -50,7 +50,7 @@ export default function Layout() {
             ),
           }}
         />
-        
+
         <Tabs.Screen
           name="chat"
           options={{
