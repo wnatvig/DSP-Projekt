@@ -16,8 +16,8 @@ CREATE TABLE users (
 );
 
 CREATE TABLE courses (
-    course_id VARCHAR(50) NOT NULL PRIMARY KEY,
-    course_name VARCHAR(255) NOT NULL
+    courseID VARCHAR(50) NOT NULL PRIMARY KEY,
+    courseName VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE events (
@@ -25,14 +25,14 @@ CREATE TABLE events (
     userId VARCHAR(255),
     eventName VARCHAR(255) NOT NULL,
     eventDescription TEXT NOT NULL,
-    eventDate DATE NOT NULL,
+    eventDate DATETIME NOT NULL,
     eventImage VARCHAR(255) NOT NULL,
     eventLocation TEXT NOT NULL,
     maxParticipants INT NOT NULL,
     FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
 );
 
-CREATE TABLE event_participants (
+CREATE TABLE eventParticipants (
     eventId VARCHAR(255) NOT NULL,
     userId VARCHAR(255) NOT NULL,
     PRIMARY KEY (eventId, userId),

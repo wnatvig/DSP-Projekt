@@ -7,7 +7,9 @@ const { createEvent,
         getEvents,
         getParticipants,
         joinEvent,
-        leaveEvent
+        leaveEvent,
+        getFilterEvent,
+
 } = require('../services/DBfunctions');
 
 //Create event
@@ -168,5 +170,9 @@ router.delete("/:eventId", async (req, res) => {
         });
     }
 });
+
+router.get("/filteredEvents", async (req, res) =>{
+    const result = await getFilterEvent()
+})
 
 module.exports = router;

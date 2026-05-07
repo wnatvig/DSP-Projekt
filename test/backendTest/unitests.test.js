@@ -1,10 +1,13 @@
 const mysql = require('mysql2');
 const {
+    createEvent,
     createUser,
     getUser,
+    getEvent,
+    removeEvent,
     removeUser,
-    createEvent,
-    getEvent
+    getEventParticipants,
+    getUserEvents
 } = require('../../backend/services/DBfunctions');
 
 const db = mysql.createPool({

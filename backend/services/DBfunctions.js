@@ -141,6 +141,67 @@ async function getEventParticipants(event) {
     return {participants};
 }
 
+async function getUserEvents(user) {
+    const eventQuery = 'SELECT * FROM eventParticipants WHERE userId = ?';
+    const eventResults = await db.promise().query(eventQuery, [user.userId]);
+
+    const events = [];
+
+    for (const event of eventResults[0]) {
+        const event = await getEvent({ eventId: event.eventId });
+    }
+    
+    return events;
+}
+
+//Hämta ett event page med events sorterade och filtrerade  
+// Man skulle kunna köra två sätt, en sökning ifall man använder userId och en sökning ifall man inte har det
+async function getEventPage(user, filters = {}, pageSize) {
+
+
+}
+
+async function getFilterEvent(user, filters = {}) {
+    let filterQuery = `
+        SELECT events.*
+        FROM events
+        JOIN users
+            ON events.userId = users.userId
+        WHERE users.username = ?
+    `;
+
+    const values = [user.username];
+
+    if (filters.eventName) {
+        filterQuery += ' AND events.eventName = ?';
+        values.push(filters.eventName);
+    }
+
+    if (filters.eventDate) {
+        filterQuery += ' AND events.eventDate = ?';
+        values.push(filters.eventDate);
+    }
+
+    if (filters.eventLocation) {
+        filterQuery += ' AND events.eventLocation = ?';
+        values.push(filters.eventLocation);
+    }
+
+    if (filters.maxParticipants) {
+        filterQuery += ' AND events.maxParticipants = ?';
+        values.push(filters.maxParticipants);
+    }
+
+    const [filteredEvents] = await db.promise().query(filterQuery, values);
+
+    return filteredEvents;
+}
+
+//söka efter ett event från dess namn
+async function searchEvent(eventname){
+    
+}
+
 module.exports = {
     createEvent,
     createUser,
@@ -148,8 +209,13 @@ module.exports = {
     getEvent,
     removeEvent,
     removeUser,
-    getEventParticipants
+    getEventParticipants,
+    getUserEvents,
+    searchEvent,
+    getFilterEvent,
+    
 }
+
 
 // TODO;
 // Vi behöver skapa funktioner för att göra följande:
