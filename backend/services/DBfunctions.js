@@ -29,7 +29,6 @@ async function createUser(user){
             user.bio]
         );
         return result[0];
-    
 }
 
 async function createEvent(event, user) {
@@ -77,7 +76,6 @@ async function joinEvent(event, user){
     const query = `INSERT INTO eventParticipants (eventId, userId) VALUES (?,?)`;
     const result = await db.promise().query(query, [event.eventId, user.userId]);
     return result[0];
-
 }
 
 async function leaveEvent(event, user){
@@ -103,7 +101,6 @@ async function removeUser(user){
     } finally {
         con.release();
     }
-
 }
 
 async function removeEvent(event) {
@@ -123,12 +120,14 @@ async function removeEvent(event) {
     }
 }
 
+// Kan utöka funktionalitet för get funktioner genom att ändra SQL queries
 async function getUser(user) {
     const query = 'SELECT * FROM users WHERE userId = ?';
     const result = await db.promise().query(query, [user.userId]);
     return result[0][0];
 }
 
+// Motsvarande ändringar kan göras med getEvent, sökningar baserat på olika filtreringar
 async function getEvent(event) {
     const query = 'SELECT * FROM events WHERE eventId = ?';
     const result = await db.promise().query(query, [event.eventId]);

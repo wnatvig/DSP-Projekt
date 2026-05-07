@@ -39,3 +39,4 @@ CREATE TABLE event_participants (
     FOREIGN KEY (eventId) REFERENCES events(eventId) ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
 );
+
