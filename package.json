@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "jest": "^30.3.0"
+  },
+  "scripts": {
+    "test": "cross-env NODE_ENV=test jest"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "mysql2": "^3.22.3"
+  }
+}
