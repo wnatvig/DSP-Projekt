@@ -27,31 +27,42 @@ export default function Create_Event() {
 
   const { userId, isLoaded, isSignedIn } = useAuth();
 
-  const create_account = async () => {
+  const create_event = async () => {
     if (!isLoaded || !isSignedIn) return;
 
     try {
       const response = await fetch(
-        "http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/create_account",
+        "http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/events",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            title: title,
-            description: description,
-            time: time,
-            place: place,
-            participants: participants,
+            event: {
+              eventId: 1,
+              eventName: title,
+              eventDescription: description,
+              eventDate: time?.toISOString(),
+              eventImage: null,
+              eventLocation: place,
+              maxParticipants: Number(participants),
+            },
+          
+            user: {
+              userId: userId,
+            },
           }),
         },
       );
-
+      //eventId, userId, eventName, eventDescription, eventDate, eventImage, eventLocation, maxParticipants, currentParticipants
       const data = await response.json();
 
+      console.log("SERVER RESPONSE:");
+      console.log(JSON.stringify(data, null, 2))
+
       if (data.success) {
-        console.log("Account created!");
+        console.log("Event created!");
         router.push("/");
       } else {
         console.log("Creation failed");
@@ -142,7 +153,7 @@ export default function Create_Event() {
             <View style={styles.inputWrapper}></View>
           </View>
 
-          <Pressable style={styles.button} onPress={create_account}>
+          <Pressable style={styles.button} onPress={create_event}>
             <Text style={styles.buttonText}>Create event</Text>
           </Pressable>
         </View>
