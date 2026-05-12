@@ -39,3 +39,13 @@ CREATE TABLE eventParticipants (
     FOREIGN KEY (eventId) REFERENCES events(eventId) ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
 );
+
+CREATE TABLE eventChats (
+    messageId INT PRIMARY KEY AUTO_INCREMENT,
+    eventId INT NOT NULL,
+    userId VARCHAR(255) NOT NULL,
+    textString TEXT NOT NULL,
+    timeSent DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (eventId) REFERENCES events(eventId) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
+);

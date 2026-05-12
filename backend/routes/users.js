@@ -1,7 +1,7 @@
 //imports
 const express = require("express");
 const router = express.Router();
-const {createUser, getUser, removeUser} = require('../services/dbFunctions');
+const {createUser, getUser, removeUser} = require('../services/DBfunctions');
 
 
 router.post('/createUser', async (req, res)=>{
