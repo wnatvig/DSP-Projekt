@@ -38,6 +38,27 @@ export default function Layout() {
         />
 
         <Tabs.Screen
+          name="helpCenter"
+          options={{
+            href: null,
+          }}
+        />
+
+        <Tabs.Screen
+          name="privacy"
+          options={{
+            href: null,
+          }}
+        />
+        
+        <Tabs.Screen
+          name="TermsCondition"
+          options={{
+            href: null,
+          }}
+        />
+
+        <Tabs.Screen
           name="settings"
           options={{
             title: "Settings",
@@ -95,27 +116,6 @@ export default function Layout() {
       </Tabs>
 
       {/* Floating button */}
-      <Pressable
-        onPress={() => router.push("/make-event")}
-        style={{
-          position: "absolute",
-          bottom: 90, // 👈 adjust this
-          right: 160,
-          width: 70,
-          height: 70,
-          borderRadius: 35,
-          backgroundColor: "#7393D8",
-          justifyContent: "center",
-          alignItems: "center",
-          elevation: 8, // Android shadow
-          shadowColor: "#000", // iOS shadow
-          shadowOpacity: 0.3,
-          shadowRadius: 8,
-          shadowOffset: { width: 0, height: 4 },
-        }}
-      >
-        <Text style={{ color: "white", fontSize: 36 }}>+</Text>
-      </Pressable>
     </View>
   );
 }

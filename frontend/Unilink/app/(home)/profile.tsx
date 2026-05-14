@@ -40,15 +40,11 @@ const ProfileScreen = () => {
       try {
         const token = await getToken();
 
-        const res = await fetch("http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/users/getUser/${userId}", {
+        const res = await fetch('http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/users/getUser/?${userId}', {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            user:{
-              userId: userId
-            }
-          })
+          }
         });
 
         if (!res.ok) {
@@ -60,7 +56,7 @@ const ProfileScreen = () => {
           console.log("Successss");
           console.log(JSON.stringify(data, null, 2));
         }
-        setUser(data);
+        setUser(data.data);
       } catch (err) {
         console.log("Error fetching user:", err);
       } finally {
@@ -111,7 +107,7 @@ const ProfileScreen = () => {
       </View>
 
       {/* STATS */}
-      <View style={styles.statsContainer}>
+      <View style={styles.section}>
       <Text style={styles.sectionTitle}>Gender</Text>
       <Text style={styles.bio}>{user.gender || "No bio yet."}</Text>
       <Text style={styles.sectionTitle}>Languages</Text>
@@ -124,7 +120,11 @@ const ProfileScreen = () => {
         <Text style={styles.bio}>{user.bio || "No bio yet."}</Text>
       </View>
 
-      <Pressable style={styles.logoutButton} onPress={() => signOut()}>
+      <Pressable style={({ pressed }) => [
+          styles.logoutButton,
+          pressed && { opacity: 0.7 },
+        ]} 
+        onPress={() => signOut()}>
         <Text style={styles.logoutText}>Log Out</Text>
       </Pressable>
     </ScrollView>
@@ -232,21 +232,13 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     padding: 20,
 
-    shadowColor: "#fff",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 1,
-    shadowRadius: 8,
-
     elevation: 5,
   },
 
   sectionTitle: {
     fontSize: 18,
     fontWeight: "700",
-    marginBottom: 12,
+    marginBottom: 2,
     color: "#fff",
   },
 

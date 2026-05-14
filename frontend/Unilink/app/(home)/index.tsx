@@ -1,7 +1,13 @@
 import { Show, useUser, useClerk } from "@clerk/expo";
 import { useRouter, Link, Stack } from "expo-router";
-import { Text, View, Pressable, StyleSheet, ScrollView } from "react-native";
-import { useState, useEffect } from "react";
+import {
+  Text,
+  View,
+  Pressable,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+} from "react-native";import { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 type EventItem = {
@@ -46,24 +52,36 @@ export default function Page() {
 
   const [message, setMessage] = useState("");
 
+  const [searchTitle, setSearchTitle] = useState("");
+  const [searchLocation, setSearchLocation] = useState("");
+
   const fetchEvent = async () => {
     try {
-      console.log("trying to fetch");
-      const response = await fetch(
-        "http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events/getEvent",
-      );
-
-      const data = await response.json();
-      console.log(JSON.stringify(data, null, 2));
-      if(data.success){
-        console.log("Event fetched");
-      }else{
-        console.log("error");
+      const filters = new URLSearchParams();
+  
+      if (searchTitle) {
+        filters.append("eventName", searchTitle);
       }
-      setEvents(data);
-      setMessage("Events updated");
+  
+      if (searchLocation) {
+        filters.append("eventLocation", searchLocation);
+      }
+  
+      const url = `http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events?${filters.toString()}`;
+  
+      console.log(url);
+  
+      const response = await fetch(url, {
+        method: "GET",
+      },);
+  
+      const data = await response.json();
+  
+      if (data.success) {
+        setEvents(data.data);
+      }
+  
     } catch (error) {
-      setMessage("server error");
       console.log(error);
     }
   };
@@ -90,6 +108,35 @@ export default function Page() {
         
         <Text style={styles.title}>Welcome!</Text>
         <Text style={styles.title}>Lets join an event!</Text>
+
+        <View style={styles.filterContainer}>
+  <TextInput
+    placeholder="Search title..."
+    placeholderTextColor="#DDE7FF"
+    value={searchTitle}
+    onChangeText={setSearchTitle}
+    style={styles.filterInput}
+  />
+
+  <TextInput
+    placeholder="Search location..."
+    placeholderTextColor="#DDE7FF"
+    value={searchLocation}
+    onChangeText={setSearchLocation}
+    style={styles.filterInput}
+  />
+
+  <Pressable
+    style={({ pressed }) => [
+      styles.filterButton,
+      pressed && { opacity: 0.7 },
+    ]}
+    onPress={fetchEvent}
+  >
+    <Ionicons name="search" size={20} color="white" />
+    <Text style={styles.filterButtonText}>Search</Text>
+  </Pressable>
+</View>
 
         {message ? <Text>{message}</Text> : null}
 
@@ -137,7 +184,17 @@ export default function Page() {
         <Show when="signed-in">
           <Text>Signed in as {user?.emailAddresses[0].emailAddress}</Text>
         </Show>
+
       </ScrollView>
+      <Pressable
+        onPress={() => router.push("/make-event")}
+        style={({ pressed }) => [
+          styles.plusbutton,
+          pressed && { opacity: 0.7 },
+        ]}
+      >
+        <Text style={{ color: "white", fontSize: 36 }}>+</Text>
+      </Pressable>
     </>
   );
 }
@@ -145,13 +202,15 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    paddingTop: 60,
+    paddingTop: 20,
     gap: 16,
     backgroundColor: '#E9D5FF',
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
+    textAlign: "center",
+    color: "#9370DB",
   },
   card: {
     backgroundColor: "#7393D8",
@@ -165,8 +224,9 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 1,
     shadowRadius: 8,
-  
     elevation: 5,
+    borderWidth: 2,
+    borderColor: "#fff",
   },
   cardTitle: {
     fontSize: 18,
@@ -189,5 +249,58 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontWeight: "600",
+  },
+  plusbutton: {
+    position: "absolute",
+          bottom: 10, // 👈 adjust this
+          right: 160,
+          width: 70,
+          height: 70,
+          borderRadius: 35,
+          backgroundColor: "#7393D8",
+          justifyContent: "center",
+          alignItems: "center",
+          elevation: 8, // Android shadow
+          shadowColor: "#000", // iOS shadow
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          shadowOffset: { width: 0, height: 4 },
+  },
+  filterContainer: {
+    backgroundColor: "#9370DB",
+    padding: 16,
+    borderRadius: 16,
+    gap: 12,
+    marginTop: 20
+  
+  },
+  
+  filterInput: {
+    backgroundColor: "#5E7FC9",
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    color: "#fff",
+    fontSize: 15,
+  
+    borderWidth: 2,
+    borderColor: "#fff",
+  },
+  
+  filterButton: {
+    backgroundColor: "#1D3557",
+    borderRadius: 12,
+    paddingVertical: 12,
+  
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 8,
+  },
+  
+  filterButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "700",
   },
 });

@@ -1,11 +1,14 @@
 import { View, Text, StyleSheet, Switch, Pressable, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
+import { useRouter} from "expo-router";
+
 
 export default function SettingsScreen() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
   const [locationEnabled, setLocationEnabled] = useState(true);
+  const router = useRouter();
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -15,7 +18,9 @@ export default function SettingsScreen() {
         <Text style={styles.sectionTitle}>Account</Text>
 
 
-        <Pressable style={styles.settingRow}>
+        <Pressable style={styles.settingRow}  onPress={() =>
+                router.push('/privacy')
+              }>
           <View style={styles.leftSide}>
             <Ionicons name="lock-closed-outline" size={22} color="#fff" />
             <Text style={styles.settingText}>Privacy</Text>
@@ -26,7 +31,7 @@ export default function SettingsScreen() {
       </View>
 
       {/* NOTIFICATIONS */}
-      <View style={styles.section}>
+      <View style={styles.section} >
         <Text style={styles.sectionTitle}>Notifications</Text>
 
         <View style={styles.settingRow}>
@@ -63,7 +68,9 @@ export default function SettingsScreen() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Support</Text>
 
-        <Pressable style={styles.settingRow}>
+        <Pressable style={styles.settingRow} onPress={() =>
+                router.push('/helpCenter')
+              }>
           <View style={styles.leftSide}>
             <Ionicons name="help-circle-outline" size={22} color="#fff" />
             <Text style={styles.settingText}>Help Center</Text>
@@ -72,7 +79,9 @@ export default function SettingsScreen() {
           <Ionicons name="chevron-forward" size={20} color="#DDE7FF" />
         </Pressable>
 
-        <Pressable style={styles.settingRow}>
+        <Pressable style={styles.settingRow} onPress={() =>
+                router.push('/TermsCondition')
+              }>
           <View style={styles.leftSide}>
             <Ionicons name="document-text-outline" size={22} color="#fff" />
             <Text style={styles.settingText}>Terms & Conditions</Text>
