@@ -27,16 +27,32 @@ io.on('connection', (socket) => {
     socket.on('joinRoom', (roomId) => {
         socket.join(roomId);
         console.log(`${socket.id} joined room ${roomId}`);
+        
+        socket.to(roomId).emit('receiveMessage',{
+            messageId: Date.now().toString(),
+            eventId: roomId,
+            userId: 'no',
+            username: 'no',
+            textString: 'A user joined the chat',
+            timeSent: Date.now()
+        });
     });
 
     // skicka msg
-    socket.on('sendMessage', ({ roomId, userId, message }) => {
-        io.to(roomId).emit('receiveMessage', {
-            userId,
-            message,
-            timestamp: new Date()
-        });
+    socket.on('sendMessage', ({ roomId, userId, username, textString, timeSent }) => {
+    io.to(roomId).emit('receiveMessage', {
+        messageId: Date.now().toString(),
+        eventId: roomId,
+        userId,
+        username,
+        textString,
+        timeSent
     });
+});
+    socket.on('leaveRoom', (roomId) => {
+    socket.leave(roomId);
+    console.log(`${socket.id} left room ${roomId}`);
+});
 
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
