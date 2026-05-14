@@ -22,10 +22,10 @@ router.post('/createUser', async (req, res)=>{
     }
 );
 
-router.get('/getUser', async (req, res)=>{
+router.get('/:userId', async (req, res)=>{
     try{
-        const result = await getUser(req.body);
-            res.status(201).json({
+        const result = await getUser(req.params.userId);
+            res.status(200).json({
             success: true,
             data: result
             });
