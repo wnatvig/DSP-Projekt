@@ -52,8 +52,10 @@ export default function MyEventsPage() {
         }}
       />
 
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>My Events</Text>
+        <ScrollView
+          style={styles.screen}
+          contentContainerStyle={styles.container}
+        >
 
         {message ? <Text>{message}</Text> : null}
 
@@ -86,7 +88,13 @@ export default function MyEventsPage() {
             </Pressable>
           ))
         ) : (
-          <Text>Du har inga events ännu...</Text>
+          <Text
+          style={{
+            color: "#1D3557",
+            fontSize: 16,
+            fontWeight: "600",
+          }}
+          >Du har inga events ännu...</Text>
         )}
       </ScrollView>
     </>
@@ -94,30 +102,58 @@ export default function MyEventsPage() {
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: "#E9D5FF",
+  },
+
   container: {
     padding: 20,
     paddingTop: 60,
     gap: 16,
   },
+
   title: {
     fontSize: 24,
     fontWeight: "bold",
+    color: "#1D3557",
+
+    textShadowColor: "rgba(255,255,255,0.7)",
+    textShadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    textShadowRadius: 6,
   },
+
   card: {
-    backgroundColor: "#fff",
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: "#ddd",
+    backgroundColor: "#7393D8",
+    padding: 18,
+    borderRadius: 18,
+    marginBottom: 14,
+
+    shadowColor: "#fff",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+
+    elevation: 5,
   },
+
   cardTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 10,
+    color: "#fff",
   },
+
   cardText: {
     fontSize: 16,
-    marginBottom: 4,
+    marginBottom: 6,
+    color: "#fff",
+    opacity: 0.95,
   },
 });

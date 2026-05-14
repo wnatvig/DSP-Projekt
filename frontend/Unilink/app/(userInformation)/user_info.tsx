@@ -27,7 +27,7 @@ export default function Create_Account() {
 
     try {
       const response = await fetch(
-        "http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/create_account",
+        "http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/users/createUser",
         {
           method: "POST",
           headers: {
@@ -59,7 +59,6 @@ export default function Create_Account() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={globalStyles.container}></View>
       <View style={globalStyles.container}>
         <Image
           source={require("@/assets/images/UniLinkLogo.png")}
@@ -92,6 +91,8 @@ export default function Create_Account() {
               placeholderTextColor={"#222"}
               multiline
               numberOfLines={6}
+              onChangeText={setbio}
+              value={bio}
             />
           </View>
         </View>

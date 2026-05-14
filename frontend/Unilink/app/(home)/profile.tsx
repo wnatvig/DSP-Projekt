@@ -6,8 +6,9 @@ import {
   ActivityIndicator,
   Image,
   ScrollView,
+  Pressable,
 } from "react-native";
-import { useAuth } from "@clerk/expo";
+import { useAuth, useClerk } from "@clerk/expo";
 
 type User = {
   username: string;
@@ -17,9 +18,10 @@ type User = {
 };
 
 const ProfileScreen = () => {
-  const { getToken, isSignedIn } = useAuth();
+  const { signOut } = useClerk();
+  const { userId, getToken, isSignedIn } = useAuth();
 
-  //const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
 
   const [user, setUser] = useState<User | null>({
     username: "Viktor",
@@ -38,10 +40,15 @@ const ProfileScreen = () => {
       try {
         const token = await getToken();
 
-        const res = await fetch("http://YOUR_BACKEND_URL/api/user/me", {
+        const res = await fetch("http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/users/getUser/${userId}", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          body: JSON.stringify({
+            user:{
+              userId: userId
+            }
+          })
         });
 
         if (!res.ok) {
@@ -49,6 +56,10 @@ const ProfileScreen = () => {
         }
 
         const data = await res.json();
+        if(data.success){
+          console.log("Successss");
+          console.log(JSON.stringify(data, null, 2));
+        }
         setUser(data);
       } catch (err) {
         console.log("Error fetching user:", err);
@@ -96,17 +107,26 @@ const ProfileScreen = () => {
           style={styles.avatar}
         />
 
-        <Text style={styles.username}>{user.username}</Text>
+        <Text style={styles.username}>{user.username ||"Username"}</Text>
       </View>
 
       {/* STATS */}
-      <View style={styles.statsContainer}></View>
+      <View style={styles.statsContainer}>
+      <Text style={styles.sectionTitle}>Gender</Text>
+      <Text style={styles.bio}>{user.gender || "No bio yet."}</Text>
+      <Text style={styles.sectionTitle}>Languages</Text>
+      <Text style={styles.bio}>{user.languages || "No bio yet."}</Text>
+      </View>
 
       {/* BIO */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>About</Text>
         <Text style={styles.bio}>{user.bio || "No bio yet."}</Text>
       </View>
+
+      <Pressable style={styles.logoutButton} onPress={() => signOut()}>
+        <Text style={styles.logoutText}>Log Out</Text>
+      </Pressable>
     </ScrollView>
   );
 };
@@ -116,63 +136,137 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#E9D5FF",
   },
+
   center: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#E9D5FF",
   },
+
   header: {
     alignItems: "center",
-    paddingVertical: 30,
-    borderBottomWidth: 1,
-    borderColor: "#eee",
+    paddingTop: 70,
+    paddingBottom: 30,
   },
+
   avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 10,
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    marginBottom: 16,
+
+    shadowColor: "#fff",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 10,
+
+    elevation: 6,
   },
+
   username: {
-    fontSize: 22,
-    fontWeight: "600",
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#1D3557",
+
+    textShadowColor: "rgba(255,255,255,0.7)",
+    textShadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    textShadowRadius: 6,
   },
+
   email: {
     fontSize: 14,
-    color: "gray",
-    marginTop: 4,
+    color: "#1D3557",
+    opacity: 0.7,
+    marginTop: 6,
   },
+
   statsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
+    marginHorizontal: 20,
+    marginBottom: 20,
+    backgroundColor: "#7393D8",
+    borderRadius: 18,
     paddingVertical: 20,
+
+    shadowColor: "#fff",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+
+    elevation: 5,
   },
+
   stat: {
     alignItems: "center",
   },
+
   statNumber: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#fff",
   },
+
   statLabel: {
-    fontSize: 12,
-    color: "gray",
+    fontSize: 13,
+    color: "#DDE7FF",
+    marginTop: 4,
   },
+
   section: {
+    marginHorizontal: 20,
+    marginBottom: 20,
+    backgroundColor: "#7393D8",
+    borderRadius: 18,
     padding: 20,
-    borderTopWidth: 1,
-    borderColor: "#eee",
+
+    shadowColor: "#fff",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+
+    elevation: 5,
   },
+
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 10,
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 12,
+    color: "#fff",
   },
+
   bio: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: "#333",
+    fontSize: 15,
+    lineHeight: 24,
+    color: "#fff",
+    opacity: 0.95,
+  },
+  logoutButton: {
+    marginTop: 12,
+    marginHorizontal: 12,
+    backgroundColor: "#1D3557",
+    paddingVertical: 18,
+    borderRadius: 16,
+    alignItems: "center",
+  },
+  logoutText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "700",
   },
 });

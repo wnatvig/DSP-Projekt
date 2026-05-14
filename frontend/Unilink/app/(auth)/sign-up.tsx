@@ -64,6 +64,7 @@ export default function Page() {
     signUp.missingFields.length === 0
   ) {
     return (
+      
       <ThemedView style={styles.container}>
         <ThemedText type="title" style={styles.title}>
           Verify your account
@@ -159,15 +160,9 @@ export default function Page() {
       >
         <ThemedText style={styles.buttonText}>Sign up</ThemedText>
       </Pressable>
-      {/* For your debugging purposes. You can just console.log errors, but we put them in the UI for convenience */}
-      {errors && (
-        <ThemedText style={styles.debug}>
-          {JSON.stringify(errors, null, 2)}
-        </ThemedText>
-      )}
 
       <View style={styles.linkContainer}>
-        <ThemedText>Already have an account? </ThemedText>
+        <ThemedText style={styles.label}>Already have an account? </ThemedText>
         <Link href="/sign-in">
           <ThemedText type="link">Sign in</ThemedText>
         </Link>
@@ -182,26 +177,30 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 80,
     gap: 12,
+    backgroundColor: '#E9D5FF',
   },
   title: {
     marginBottom: 8,
+    color: '#7393D8',
   },
   label: {
     fontWeight: "600",
     fontSize: 14,
+    color: '#7393D8',
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#7393D8",
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
     backgroundColor: "#fff",
   },
   button: {
-    backgroundColor: "#0a7ea4",
+    backgroundColor: "#7393D8",
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
@@ -224,9 +223,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     marginTop: 8,
+    color: '#7393D8',
   },
   secondaryButtonText: {
-    color: "#0a7ea4",
+    color: "#7393D8",
     fontWeight: "600",
   },
   linkContainer: {

@@ -15,7 +15,7 @@ export default function Layout() {
   return (
     <View style={{ flex: 1 }}>
       {/* Tabs */}
-      <Tabs>
+      <Tabs >
         <Tabs.Screen
           name="index"
           options={{
@@ -24,7 +24,7 @@ export default function Layout() {
               <Ionicons
                 name={focused ? "home" : "home-outline"}
                 size={size}
-                color={color}
+                color={'#7393D8'}
               />
             ),
           }}
@@ -40,12 +40,12 @@ export default function Layout() {
         <Tabs.Screen
           name="settings"
           options={{
-            title: "settings",
+            title: "Settings",
             tabBarIcon: ({ color, size, focused }) => (
               <Ionicons
                 name={focused ? "settings" : "settings-outline"}
                 size={size}
-                color={color}
+                color={'#7393D8'}
               />
             ),
           }}
@@ -54,12 +54,12 @@ export default function Layout() {
         <Tabs.Screen
           name="chat"
           options={{
-            title: "my chats",
+            title: "My chats",
             tabBarIcon: ({ color, size, focused }) => (
               <Ionicons
                 name={focused ? "chatbubble" : "chatbubble-outline"}
                 size={size}
-                color={color}
+                color={'#7393D8'}
               />
             ),
           }}
@@ -68,12 +68,12 @@ export default function Layout() {
         <Tabs.Screen
           name="myEvents"
           options={{
-            title: "my events",
+            title: "My events",
             tabBarIcon: ({ color, size, focused }) => (
               <Ionicons
                 name={focused ? "calendar" : "calendar-outline"}
                 size={size}
-                color={color}
+                color={'#7393D8'}
               />
             ),
           }}
@@ -82,12 +82,12 @@ export default function Layout() {
         <Tabs.Screen
           name="profile"
           options={{
-            title: "profile",
+            title: "Profile",
             tabBarIcon: ({ color, size, focused }) => (
               <Ionicons
                 name={focused ? "person" : "person-outline"}
                 size={size}
-                color={color}
+                color={'#7393D8'}
               />
             ),
           }}
@@ -104,7 +104,7 @@ export default function Layout() {
           width: 70,
           height: 70,
           borderRadius: 35,
-          backgroundColor: "black",
+          backgroundColor: "#7393D8",
           justifyContent: "center",
           alignItems: "center",
           elevation: 8, // Android shadow

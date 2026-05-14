@@ -15,6 +15,7 @@ import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useAuth } from "@clerk/expo";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Background } from "@react-navigation/elements";
 
 export default function Create_Event() {
   const [message, setMessage] = useState("");
@@ -29,6 +30,9 @@ export default function Create_Event() {
 
   const create_event = async () => {
     if (!isLoaded || !isSignedIn) return;
+    if(title == "" || description == "" || place == "" || participants == "" || time == null) 
+      {setMessage("Fill in all fields before creating!")
+        return};
 
     try {
       const response = await fetch(
@@ -40,13 +44,14 @@ export default function Create_Event() {
           },
           body: JSON.stringify({
             event: {
-              eventId: 1,
+              userId: userId,
               eventName: title,
               eventDescription: description,
               eventDate: time?.toISOString(),
               eventImage: null,
               eventLocation: place,
               maxParticipants: Number(participants),
+              currentParticipants: 1
             },
           
             user: {
@@ -76,8 +81,8 @@ export default function Create_Event() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={globalStyles.container}>
-        <View style={globalStyles.container}>
+      <View style={styles.container}>
+        <View style={styles.container}>
           <Image
             source={require("@/assets/images/UniLinkLogo.png")}
             style={styles.headerLogo}
@@ -153,6 +158,11 @@ export default function Create_Event() {
             <View style={styles.inputWrapper}></View>
           </View>
 
+          {message ? (
+  <Text style={styles.errorText}>{message}</Text>
+) : null}
+
+
           <Pressable style={styles.button} onPress={create_event}>
             <Text style={styles.buttonText}>Create event</Text>
           </Pressable>
@@ -163,8 +173,16 @@ export default function Create_Event() {
 }
 
 const styles = StyleSheet.create({
+
+  container: {
+    padding: 20,
+    paddingTop: 100,
+    gap: 11,
+    backgroundColor: '#E9D5FF',
+    flex: 1
+  },
   button: {
-    width: 250,
+    width: 310,
     height: 50,
     borderRadius: 10,
 
@@ -175,7 +193,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
 
     backgroundColor: "white",
-    marginTop: 10,
+    marginTop: -20,
+    marginBottom: 40,
   },
 
   buttonText: {
@@ -188,8 +207,9 @@ const styles = StyleSheet.create({
     height: 120,
     resizeMode: "contain",
     marginBottom: 30,
-    marginTop: -80,
-    position: "relative",
+    marginTop: -60,
+    position: "absolute",
+    left: 110,
   },
   titleContainer: {
     flexDirection: "row",
@@ -230,14 +250,15 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   timeBox: {
+    height: 50,
     backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 12,
-    paddingHorizontal: 85,
-    paddingVertical: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
     justifyContent: "center",
-    marginBottom: 10,
+    marginBottom: 0,
   },
 
   timeText: {
@@ -248,5 +269,13 @@ const styles = StyleSheet.create({
   placeholderText: {
     fontSize: 15,
     color: "#999",
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 10,
+    marginTop: -20,
+    paddingBottom: -30,
+    fontSize: 14,
+    flex: 1
   },
 });

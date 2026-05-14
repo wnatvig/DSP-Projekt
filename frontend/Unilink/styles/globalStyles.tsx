@@ -26,8 +26,8 @@ export const globalStyles = StyleSheet.create({
   },
   textbox: {
     height: 50,
-    width: 250,
-    paddingHorizontal: 12,
+    width: 310,
+    paddingHorizontal: 10,
     borderRadius: 10,
 
     backgroundColor: "#f5f5f5",
@@ -37,6 +37,6 @@ export const globalStyles = StyleSheet.create({
     color: "#222",
     fontSize: 16,
 
-    marginBottom: 12,
+    marginBottom: 0,
   },
 });

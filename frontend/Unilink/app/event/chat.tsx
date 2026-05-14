@@ -11,7 +11,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useUser } from "@clerk/expo";
+import { useAuth, useUser } from "@clerk/expo";
 import { socket, API_URL } from "../../lib/socket";
 
 type ChatParams = {
@@ -20,18 +20,18 @@ type ChatParams = {
 };
 
 type Message = {
-  id: string;
+  messageId: string;
   eventId: string;
-  text: string;
   userId: string;
   username: string;
-  createdAt: string;
+  textString: string;
+  timeSent: string;
 };
 
 export default function Chat() {
   const router = useRouter();
   const { eventId, title } = useLocalSearchParams<ChatParams>();
-  const { user } = useUser();
+  const { userId, isLoaded, isSignedIn } = useAuth();
 
   const flatListRef = useRef<FlatList<Message>>(null);
 
@@ -63,17 +63,18 @@ export default function Chat() {
     loadOldMessages();
 
     socket.connect();
-    socket.emit("join-event-chat", eventId);
+    socket.emit("joinRoom", eventId);
 
-    socket.on("new-message", (newMessage: Message) => {
-      if (newMessage.eventId === eventId) {
+    socket.on("receiveMessage", (newMessage: Message) => {
+      console.log("received message");
+      if (true) {
         setMessages((prev) => [...prev, newMessage]);
       }
     });
 
     return () => {
-      socket.emit("leave-event-chat", eventId);
-      socket.off("new-message");
+      socket.emit("leaveRoom", eventId);
+      socket.off("receiveMessage");
       socket.disconnect();
     };
   }, [eventId]);
@@ -85,15 +86,16 @@ export default function Chat() {
   }, [messages]);
 
   function sendMessage() {
-    if (!message.trim() || !eventId || !user) return;
+    if (!message.trim() || !eventId) return;
 
-    socket.emit("send-message", {
-      eventId,
-      text: message.trim(),
-      userId: user.id,
-      username: user.username || user.firstName || "Unknown user",
+    socket.emit("sendMessage", {
+      roomId: eventId,
+      userId: userId,
+      username: null,
+      textString: message.trim(),
+      timeSent: Date.now(),
     });
-
+    console.log("Sent message");
     setMessage("");
   }
 
@@ -126,10 +128,10 @@ export default function Chat() {
       <FlatList
         ref={flatListRef}
         data={messages}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.messageId}
         contentContainerStyle={styles.messagesContainer}
         renderItem={({ item }) => {
-          const isMine = item.userId === user?.id;
+          const isMine = item.userId === userId;
 
           return (
             <View
@@ -143,11 +145,11 @@ export default function Chat() {
               <Text
                 style={[styles.messageText, isMine && styles.myMessageText]}
               >
-                {item.text}
+                {item.textString}
               </Text>
 
               <Text style={[styles.timeText, isMine && styles.myTimeText]}>
-                {new Date(item.createdAt).toLocaleTimeString([], {
+                {new Date(item.timeSent).toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}

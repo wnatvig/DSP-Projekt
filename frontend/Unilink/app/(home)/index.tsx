@@ -27,22 +27,39 @@ export default function Page() {
       title: "Fysikplugg",
       time: "14:00",
       place: "Biblioteket",
-      participants: "5",
+      participants: "3",
       max: "5",
       photo:
         "https://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/images/UniLinkLogo.png",
     },
+    {
+      id: 2,
+      title: "Fysikplugg 2",
+      time: "14:00",
+      place: "Biblioteket",
+      participants: "3",
+      max: "5",
+      photo:
+        "https://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/images/UniLinkLogo.png",
+    }
   ]);
 
   const [message, setMessage] = useState("");
 
   const fetchEvent = async () => {
     try {
+      console.log("trying to fetch");
       const response = await fetch(
-        "http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events",
+        "http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events/getEvent",
       );
 
       const data = await response.json();
+      console.log(JSON.stringify(data, null, 2));
+      if(data.success){
+        console.log("Event fetched");
+      }else{
+        console.log("error");
+      }
       setEvents(data);
       setMessage("Events updated");
     } catch (error) {
@@ -68,7 +85,9 @@ export default function Page() {
         }}
       />
 
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView style={{ backgroundColor: "#E9D5FF" }}
+  contentContainerStyle={styles.container}>
+        
         <Text style={styles.title}>Welcome!</Text>
         <Text style={styles.title}>Lets join an event!</Text>
 
@@ -117,9 +136,6 @@ export default function Page() {
 
         <Show when="signed-in">
           <Text>Signed in as {user?.emailAddresses[0].emailAddress}</Text>
-          <Pressable style={styles.button} onPress={() => signOut()}>
-            <Text style={styles.buttonText}>Sign out</Text>
-          </Pressable>
         </Show>
       </ScrollView>
     </>
@@ -131,30 +147,40 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 60,
     gap: 16,
+    backgroundColor: '#E9D5FF',
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: "#7393D8",
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
-    borderWidth: 1,
-    borderColor: "#ddd",
+    shadowColor: "#fff",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+  
+    elevation: 5,
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 8,
+    color: '#fff',
   },
   cardText: {
     fontSize: 16,
     marginBottom: 4,
+    color: '#fff',
   },
   button: {
-    backgroundColor: "#0a7ea4",
+    backgroundColor: "#7393D8",
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
