@@ -141,6 +141,12 @@ async function getEventParticipants(event) {
     return {participants};
 }
 
+async function getParticipantCount(event) {
+    const query = 'SELECT COUNT(*) as count FROM eventParticipants WHERE eventId = ?';
+    const result = await db.promise().query(query, [event.eventId]);
+    return result[0][0].count;
+}
+
 async function getUserEvents(user) {
     const eventQuery = 'SELECT * FROM eventParticipants WHERE userId = ?';
     const eventResults = await db.promise().query(eventQuery, [user.userId]);
@@ -213,6 +219,7 @@ module.exports = {
     getUserEvents,
     searchEvent,
     getFilterEvent,
+    getParticipantCount,
     
 }
 

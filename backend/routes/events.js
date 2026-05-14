@@ -9,6 +9,7 @@ const { createEvent,
         joinEvent,
         leaveEvent,
         getFilterEvent,
+        getParticipantCount,
 
 } = require('../services/DBfunctions');
 
@@ -174,5 +175,20 @@ router.delete("/:eventId", async (req, res) => {
 router.get("/filteredEvents", async (req, res) =>{
     const result = await getFilterEvent()
 })
+
+router.get("/:eventId/count", async (req, res) => {
+    try {
+        const count = await getParticipantCount({ eventId: req.params.eventId });
+        res.status(200).json({
+            success: true,
+            count: count
+        });
+    } catch(err) {
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+    }
+});
 
 module.exports = router;
