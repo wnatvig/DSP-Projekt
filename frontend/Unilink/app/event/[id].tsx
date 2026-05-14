@@ -14,7 +14,11 @@ export default function EventDetailPage() {
       photo?: string;
     }>();
 
-  const handleJoin = () => {
+  const handleJoin = async () => {
+
+    // const response = await fetch(
+    //   "http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events/join/${eventID}",
+    // );
     const currentParticipants = Number(participants);
     const maxParticipants = Number(max);
 
@@ -77,9 +81,11 @@ export default function EventDetailPage() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 20,
     paddingTop: 60,
+    gap: 16,
+    backgroundColor: '#E9D5FF',
+    flex: 1
   },
   card: {
     backgroundColor: "#fff",
