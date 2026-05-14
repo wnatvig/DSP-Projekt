@@ -19,7 +19,29 @@ export default function MyEventsPage() {
   const { user } = useUser();
   const router = useRouter();
 
-  const [events, setEvents] = useState<EventItem[]>([]);
+  // const [events, setEvents] = useState<EventItem[]>([]);
+  const [events, setEvents] = useState([
+    {
+      id: 1,
+      title: "Fysikplugg",
+      time: "14:00",
+      place: "Biblioteket",
+      participants: "3",
+      max: "5",
+      photo:
+        "https://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/images/UniLinkLogo.png",
+    },
+    {
+      id: 2,
+      title: "Fysikplugg 2",
+      time: "14:00",
+      place: "Biblioteket",
+      participants: "3",
+      max: "5",
+      photo:
+        "https://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/images/UniLinkLogo.png",
+    }
+  ]);
   const [message, setMessage] = useState("");
 
   const fetchMyEvents = async () => {
@@ -28,6 +50,9 @@ export default function MyEventsPage() {
 
       const response = await fetch(
         `http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events/my/${user.id}`,
+        {
+          method: "GET",
+        }
       );
 
       const data = await response.json();
@@ -69,7 +94,7 @@ export default function MyEventsPage() {
               ]}
               onPress={() =>
                 router.push({
-                  pathname: "/event/[id]",
+                  pathname: "/myEvent/[id]",
                   params: {
                     id: event.id,
                     title: event.title,

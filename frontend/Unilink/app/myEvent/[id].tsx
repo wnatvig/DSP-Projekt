@@ -1,6 +1,7 @@
 import { useRouter, Stack, useLocalSearchParams } from "expo-router";
 import { Pressable, Text, View, StyleSheet, Image, Alert } from "react-native";
 import { useState, useEffect } from "react";
+import { useAuth } from "@clerk/expo";
 
 
 export default function EventDetailPage() {
@@ -30,13 +31,14 @@ export default function EventDetailPage() {
   ]);
 
   const [message, setMessage] = useState("");
+  const { userId} = useAuth();
 
 
     const fetchParticipants = async () => {
       try {
         console.log("trying to fetch");
         const response = await fetch(
-          "http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events//:eventId/participants",{
+          `http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events/${id}/participants`,{
             method: "GET",
           },
         );
@@ -48,7 +50,7 @@ export default function EventDetailPage() {
         }else{
           console.log("error");
         }
-        setAllParticipants(data);
+        setAllParticipants(data.data);
         setMessage("Events updated");
       } catch (error) {
         setMessage("server error");
@@ -60,46 +62,50 @@ export default function EventDetailPage() {
       fetchParticipants();
     }, []);
 
-  const handleJoin = async () => {
-
-    // const response = await fetch(
-    //   "http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events/join/${eventID}",
-    // );
-    const currentParticipants = Number(participants);
-    const maxParticipants = Number(max);
-
-    if (currentParticipants >= maxParticipants) {
-      Alert.alert("Eventet är fullt", "Tyvärr finns det inga platser kvar.");
-      return;
-    }
-
-    Alert.alert("Success!", "Du har gått med i eventet.", [
-      {
-        text: "To event chat",
-        onPress: () =>
-          router.push({
-            pathname: "/event/chat",
-            params: {
-              eventId: id,
-              title,
+    const handleLeave = async () => {
+      try {
+        console.log("hejsan");
+        const response = await fetch(
+          `http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events/${id}/leave`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
             },
-          }),
-      },
-      {
-        text: "Back to home",
-        onPress: () => router.push("/"),
-        style: "cancel",
-      },
-    ]);
-  };
+            body: JSON.stringify({
+              userId: userId,
+            }),
+          },
+        );
+  
+        const data = await response.json();
+  
+        if (data.success) {
+          console.log("Event left");
+          Alert.alert("Success!", "Du har lämnat eventet.", [
+            {
+              text: "Back to my events",
+              onPress: () => router.push("/myEvents"),
+              style: "cancel",
+            },
+          ]);
+        } else {
+          console.log("Leaving failed");
+          router.push("/(home)");
+        }
+      } catch (error) {
+        setMessage("Network ERROR");
+        console.log(error);
+      }
+    };
 
   return (
     <>
       <Stack.Screen options={{ title: title ?? `Event ${id}` }} />
 
       <View style={styles.container}>
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
-          <Text style={styles.backButtonText}>← Back</Text>
+        <Pressable style={styles.backButton} onPress={() => router.push("/myEvents")}>
+          <Text style={styles.backButtonText}>← back </Text>
         </Pressable>
 
         <View style={styles.header}>
@@ -132,9 +138,23 @@ export default function EventDetailPage() {
     </Text>
   )}
 </View>
-          <Pressable style={styles.chatButton} onPress={handleJoin}>
-            <Text style={styles.chatButtonText}>Join Event</Text>
+          <Pressable style={styles.chatButton} onPress={handleLeave}>
+            <Text style={styles.chatButtonText}>Leave event</Text>
           </Pressable>
+          <Pressable
+  style={styles.chatButton}
+  onPress={() =>
+    router.push({
+      pathname: "/event/chat",
+      params: {
+        eventId: id,
+        title,
+      },
+    })
+  }
+>
+  <Text style={styles.chatButtonText}>Go to chat</Text>
+</Pressable>
         </View>
       </View>
     </>

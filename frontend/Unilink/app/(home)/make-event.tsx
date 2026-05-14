@@ -163,7 +163,10 @@ export default function Create_Event() {
 ) : null}
 
 
-          <Pressable style={styles.button} onPress={create_event}>
+          <Pressable style={({ pressed }) => [
+          styles.button,
+          pressed && { opacity: 0.7 },
+        ]} onPress={create_event}>
             <Text style={styles.buttonText}>Create event</Text>
           </Pressable>
         </View>
@@ -186,21 +189,19 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 10,
 
-    borderWidth: 2,
-    borderColor: "#007AFF",
-
     justifyContent: "center",
     alignItems: "center",
 
-    backgroundColor: "white",
+    backgroundColor: "#1D3557",
     marginTop: -20,
     marginBottom: 40,
   },
 
   buttonText: {
-    color: "black",
+    color: "#fff",
     fontSize: 16,
     fontWeight: "600",
+
   },
   headerLogo: {
     width: 120,
