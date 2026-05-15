@@ -39,7 +39,7 @@ async function createEvent(event, user) {
         const query1 = `
             INSERT INTO events 
             (eventId, userId, eventName, eventDescription, eventDate, eventImage, eventLocation, maxParticipants) 
-            VALUES (?,?,?,?,?,?,?,?,?)
+            VALUES (?,?,?,?,?,?,?,?)
         `;
 
         const result = await con.query(query1, [
