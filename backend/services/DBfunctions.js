@@ -38,7 +38,7 @@ async function createEvent(event, user) {
         
         const query1 = `
             INSERT INTO events 
-            (eventId, userId, eventName, eventDescription, eventDate, eventImage, eventLocation, maxParticipants, currentParticipants) 
+            (eventId, userId, eventName, eventDescription, eventDate, eventImage, eventLocation, maxParticipants) 
             VALUES (?,?,?,?,?,?,?,?,?)
         `;
 
@@ -51,7 +51,6 @@ async function createEvent(event, user) {
             event.eventImage,
             event.eventLocation,
             event.maxParticipants,
-            event.currentParticipants
         ]);
 
         const query2 = `INSERT INTO eventParticipants (eventId, userId) VALUES (?,?)`;
