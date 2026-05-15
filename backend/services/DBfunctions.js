@@ -264,7 +264,7 @@ module.exports = {
     searchEvent,
     getFilterEvent,
     getParticipantCount,
-    
+    getFilteredEventPage,
 }
 
 

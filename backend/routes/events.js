@@ -9,6 +9,7 @@ const { createEvent,
         joinEvent,
         leaveEvent,
         getFilterEvent,
+        getFilteredEventPage,
         getParticipantCount,
         eventCount,
 
@@ -188,9 +189,40 @@ router.delete("/:eventId", async (req, res) => {
     }
 });
 
-router.get("/filteredEvents", async (req, res) =>{
-    const result = await getFilterEvent()
-})
+//Get filtered event page
+router.get("/filteredEvents/page", async (req, res) => {
+    try {
+        const user = {
+            username: req.query.username
+        };
+
+        const filters = {
+            eventName: req.query.eventName,
+            eventDate: req.query.eventDate,
+            eventLocation: req.query.eventLocation,
+            maxParticipants: req.query.maxParticipants
+        };
+
+        const pageSize = req.query.pageSize || 10;
+        const page = req.query.page || 1;
+
+        const events = await getFilteredEventPage(user, filters, pageSize, page);
+
+        res.status(200).json({
+            success: true,
+            data: events,
+            page: Number(page),
+            pageSize: Number(pageSize)
+        });
+    } catch(err) {
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+    }
+});
+
+
 
 router.get("/:eventId/count", async (req, res) => {
     try {
