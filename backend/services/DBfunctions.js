@@ -121,10 +121,10 @@ async function removeEvent(event) {
 }
 
 // Kan utöka funktionalitet för get funktioner genom att ändra SQL queries
-async function getUser(user) {
+async function getUser(userId) {
     const query = 'SELECT * FROM users WHERE userId = ?';
-    const result = await db.promise().query(query, [user.userId]);
-    return result[0];
+    const result = await db.promise().query(query, [userId]);
+    return result[0][0];
 }
 
 // Motsvarande ändringar kan göras med getEvent, sökningar baserat på olika filtreringar
