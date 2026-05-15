@@ -10,6 +10,7 @@ const { createEvent,
         leaveEvent,
         getFilterEvent,
         getParticipantCount,
+        eventCount,
 
 } = require('../services/DBfunctions');
 
@@ -20,6 +21,21 @@ router.post("/", async (req, res) => {
         res.status(201).json({
             success: true,
             data: result
+        });
+    } catch(err) {
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+    }
+});
+
+router.get("/count", async (req, res) => {
+    try {
+        const count = await eventCount();
+        res.status(200).json({
+            success: true,
+            count: count
         });
     } catch(err) {
         res.status(500).json({

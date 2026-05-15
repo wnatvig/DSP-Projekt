@@ -2,6 +2,7 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+let eventCounter = 0;
 
 //skapa pool av connections för att möjliggöra flera connections samtidigt.
 const db = mysql.createPool(
@@ -60,6 +61,7 @@ async function createEvent(event, user) {
             user.userId
         ]);
         await con.commit();
+        eventCounter++;
         return result[0];
     }
     catch (err){
@@ -70,6 +72,11 @@ async function createEvent(event, user) {
         con.release();
     }
 }        
+
+async function eventCount(){
+    return eventCounter;
+}
+
 
 async function joinEvent(event, user){
     const query = `INSERT INTO eventParticipants (eventId, userId) VALUES (?,?)`;
