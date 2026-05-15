@@ -124,7 +124,7 @@ async function removeEvent(event) {
 async function getUser(user) {
     const query = 'SELECT * FROM users WHERE userId = ?';
     const result = await db.promise().query(query, [user.userId]);
-    return result[0];
+    return result[0][0];
 }
 
 // Motsvarande ändringar kan göras med getEvent, sökningar baserat på olika filtreringar
