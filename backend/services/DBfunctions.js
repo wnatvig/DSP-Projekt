@@ -2,7 +2,6 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
-let eventCounter = 0;
 
 //skapa pool av connections för att möjliggöra flera connections samtidigt.
 const db = mysql.createPool(
@@ -39,8 +38,8 @@ async function createEvent(event, user) {
         
         const query1 = `
             INSERT INTO events 
-            (userId, eventName, eventDescription, eventDate, eventImage, eventLocation, maxParticipants) 
-            VALUES (?,?,?,?,?,?,?)
+            (userId, eventName, eventDescription, eventDate, eventImage, eventLocation, maxParticipants, currentParticipants) 
+            VALUES (?,?,?,?,?,?,?,?)
         `;
 
         const result = await con.query(query1, [
@@ -51,12 +50,13 @@ async function createEvent(event, user) {
             event.eventImage,
             event.eventLocation,
             event.maxParticipants,
+            event.currentParticipants
         ]);
-
+        const eventId = result[0].insertId;
         const query2 = `INSERT INTO eventParticipants (eventId, userId) VALUES (?,?)`;
 
         await con.query(query2, [
-            event.eventId,
+            eventId,
             user.userId
         ]);
         await con.commit();
@@ -70,11 +70,6 @@ async function createEvent(event, user) {
         con.release();
     }
 }        
-
-async function eventCount(){
-    return eventCounter;
-}
-
 
 async function joinEvent(event, user){
     const query = `INSERT INTO eventParticipants (eventId, userId) VALUES (?,?)`;
@@ -120,15 +115,15 @@ async function removeEvent(event) {
         await con.rollback();
         throw err;
     } finally {
-        con.release();
+         con.release();
     }
 }
 
 // Kan utöka funktionalitet för get funktioner genom att ändra SQL queries
-async function getUser(userId) {
+async function getUser(user) {
     const query = 'SELECT * FROM users WHERE userId = ?';
-    const result = await db.promise().query(query, [userId]);
-    return result[0][0];
+    const result = await db.promise().query(query, [user.userId]);
+    return result[0];
 }
 
 // Motsvarande ändringar kan göras med getEvent, sökningar baserat på olika filtreringar
@@ -143,12 +138,6 @@ async function getEventParticipants(event) {
     const participantsResult = await db.promise().query(participantsQuery, [event.eventId]);
     const participants = participantsResult[0];
     return {participants};
-}
-
-async function getParticipantCount(event) {
-    const query = 'SELECT COUNT(*) as count FROM eventParticipants WHERE eventId = ?';
-    const result = await db.promise().query(query, [event.eventId]);
-    return result[0][0].count;
 }
 
 async function getUserEvents(user) {
@@ -223,8 +212,6 @@ module.exports = {
     getUserEvents,
     searchEvent,
     getFilterEvent,
-    getParticipantCount,
-    eventCount,
     
 }
 

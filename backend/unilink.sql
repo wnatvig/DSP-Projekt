@@ -20,8 +20,9 @@ CREATE TABLE courses (
     courseName VARCHAR(255) NOT NULL
 );
 
+-- Ändrat eventId till AUTO_INCREMENT
 CREATE TABLE events (
-    eventId VARCHAR(255) NOT NULL PRIMARY KEY,
+    eventId INT PRIMARY KEY AUTO_INCREMENT,
     userId VARCHAR(255),
     eventName VARCHAR(255) NOT NULL,
     eventDescription TEXT NOT NULL,
@@ -33,7 +34,7 @@ CREATE TABLE events (
 );
 
 CREATE TABLE eventParticipants (
-    eventId VARCHAR(255) NOT NULL,
+    eventId INT NOT NULL,
     userId VARCHAR(255) NOT NULL,
     PRIMARY KEY (eventId, userId),
     FOREIGN KEY (eventId) REFERENCES events(eventId) ON DELETE CASCADE,
