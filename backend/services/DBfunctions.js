@@ -39,12 +39,11 @@ async function createEvent(event, user) {
         
         const query1 = `
             INSERT INTO events 
-            (eventId, userId, eventName, eventDescription, eventDate, eventImage, eventLocation, maxParticipants) 
-            VALUES (?,?,?,?,?,?,?,?)
+            (userId, eventName, eventDescription, eventDate, eventImage, eventLocation, maxParticipants) 
+            VALUES (?,?,?,?,?,?,?)
         `;
 
         const result = await con.query(query1, [
-            eventCounter,
             user.userId,
             event.eventName,
             event.eventDescription,
@@ -57,11 +56,10 @@ async function createEvent(event, user) {
         const query2 = `INSERT INTO eventParticipants (eventId, userId) VALUES (?,?)`;
 
         await con.query(query2, [
-            eventCounter,
+            event.eventId,
             user.userId
         ]);
         await con.commit();
-        eventCounter++;
         return result[0];
     }
     catch (err){
