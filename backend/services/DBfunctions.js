@@ -44,7 +44,7 @@ async function createEvent(event, user) {
         `;
 
         const result = await con.query(query1, [
-            event.eventId,
+            eventCounter,
             user.userId,
             event.eventName,
             event.eventDescription,
@@ -57,7 +57,7 @@ async function createEvent(event, user) {
         const query2 = `INSERT INTO eventParticipants (eventId, userId) VALUES (?,?)`;
 
         await con.query(query2, [
-            event.eventId,
+            eventCounter,
             user.userId
         ]);
         await con.commit();
@@ -226,6 +226,7 @@ module.exports = {
     searchEvent,
     getFilterEvent,
     getParticipantCount,
+    eventCount,
     
 }
 
