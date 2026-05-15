@@ -31,8 +31,8 @@ io.on('connection', (socket) => {
         socket.to(roomId).emit('receiveMessage',{
             messageId: Date.now().toString(),
             eventId: roomId,
-            userId: 'no',
-            username: 'no',
+            userId: 'system',
+            username: 'system',
             textString: 'A user joined the chat',
             timeSent: Date.now()
         });
