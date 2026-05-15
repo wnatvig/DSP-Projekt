@@ -158,12 +158,58 @@ async function getUserEvents(user) {
     return events;
 }
 
-//Hämta ett event page med events sorterade och filtrerade  
-// Man skulle kunna köra två sätt, en sökning ifall man använder userId och en sökning ifall man inte har det
-async function getEventPage(user, filters = {}, pageSize) {
+async function getFilteredEventPage(user, filters = {}, pageSize = 10, page = 1) {
+    const limit = Number(pageSize);
+    const currentPage = Number(page);
 
+    if (!Number.isInteger(limit) || limit <= 0) {
+        throw new Error('pageSize must be a positive integer');
+    }
 
+    if (!Number.isInteger(currentPage) || currentPage <= 0) {
+        throw new Error('page must be a positive integer');
+    }
+
+    const offset = (currentPage - 1) * limit;
+
+    let filterQuery = `
+        SELECT events.*
+        FROM events
+        JOIN users
+            ON events.userId = users.userId
+        WHERE users.username = ?
+    `;
+
+    const values = [user.username];
+
+    if (filters.eventName) {
+        filterQuery += ' AND events.eventName = ?';
+        values.push(filters.eventName);
+    }
+
+    if (filters.eventDate) {
+        filterQuery += ' AND events.eventDate = ?';
+        values.push(filters.eventDate);
+    }
+
+    if (filters.eventLocation) {
+        filterQuery += ' AND events.eventLocation = ?';
+        values.push(filters.eventLocation);
+    }
+
+    if (filters.maxParticipants) {
+        filterQuery += ' AND events.maxParticipants = ?';
+        values.push(filters.maxParticipants);
+    }
+
+    filterQuery += ' ORDER BY events.eventDate ASC LIMIT ? OFFSET ?';
+    values.push(limit, offset);
+
+    const [filteredEvents] = await db.promise().query(filterQuery, values);
+
+    return filteredEvents;
 }
+
 
 async function getFilterEvent(user, filters = {}) {
     let filterQuery = `
