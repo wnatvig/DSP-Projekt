@@ -38,8 +38,8 @@ async function createEvent(event, user) {
         
         const query1 = `
             INSERT INTO events 
-            (userId, eventName, eventDescription, eventDate, eventImage, eventLocation, maxParticipants, currentParticipants) 
-            VALUES (?,?,?,?,?,?,?,?)
+            (userId, eventName, eventDescription, eventDate, eventImage, eventLocation, maxParticipants) 
+            VALUES (?,?,?,?,?,?,?)
         `;
 
         const result = await con.query(query1, [
@@ -50,7 +50,6 @@ async function createEvent(event, user) {
             event.eventImage,
             event.eventLocation,
             event.maxParticipants,
-            event.currentParticipants
         ]);
         const eventId = result[0].insertId;
         const query2 = `INSERT INTO eventParticipants (eventId, userId) VALUES (?,?)`;
@@ -120,10 +119,10 @@ async function removeEvent(event) {
 }
 
 // Kan utöka funktionalitet för get funktioner genom att ändra SQL queries
-async function getUser(user) {
+async function getUser(userId) {
     const query = 'SELECT * FROM users WHERE userId = ?';
-    const result = await db.promise().query(query, [user.userId]);
-    return result[0];
+    const result = await db.promise().query(query, [userId]);
+    return result[0][0];
 }
 
 // Motsvarande ändringar kan göras med getEvent, sökningar baserat på olika filtreringar
@@ -138,6 +137,12 @@ async function getEventParticipants(event) {
     const participantsResult = await db.promise().query(participantsQuery, [event.eventId]);
     const participants = participantsResult[0];
     return {participants};
+}
+
+async function getParticipantCount(event) {
+    const query = 'SELECT COUNT(*) as count FROM eventParticipants WHERE eventId = ?';
+    const result = await db.promise().query(query, [event.eventId]);
+    return result[0][0].count;
 }
 
 async function getUserEvents(user) {
@@ -212,6 +217,7 @@ module.exports = {
     getUserEvents,
     searchEvent,
     getFilterEvent,
+    getParticipantCount,
     
 }
 
