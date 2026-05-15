@@ -21,14 +21,14 @@ const ProfileScreen = () => {
   const { signOut } = useClerk();
   const { userId, getToken, isSignedIn } = useAuth();
 
-  // const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
-  const [user, setUser] = useState<User | null>({
-    username: "Viktor",
-    gender: "male",
-    languages: "Swedish, English",
-    bio: "I love coding!",
-  });
+  // const [user, setUser] = useState<User | null>({
+  //   username: "Viktor",
+  //   gender: "male",
+  //   languages: "Swedish, English",
+  //   bio: "I love coding!",
+  // });
 
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +40,7 @@ const ProfileScreen = () => {
       try {
         const token = await getToken();
 
-        const res = await fetch('http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/users/getUser/?${userId}', {
+        const res = await fetch(`http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/users/${userId}`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   logoutButton: {
     marginTop: 12,
     marginHorizontal: 12,
-    backgroundColor: "#1D3557",
+    backgroundColor: "#9370DB",
     paddingVertical: 18,
     borderRadius: 16,
     alignItems: "center",

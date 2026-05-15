@@ -25,30 +25,30 @@ export default function Page() {
   const { signOut } = useClerk();
   const router = useRouter();
 
-  // const [events, setEvents] = useState<EventItem[]>([])
+  const [events, setEvents] = useState<EventItem[]>([])
 
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: "Fysikplugg",
-      time: "14:00",
-      place: "Biblioteket",
-      participants: "3",
-      max: "5",
-      photo:
-        "https://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/images/UniLinkLogo.png",
-    },
-    {
-      id: 2,
-      title: "Fysikplugg 2",
-      time: "14:00",
-      place: "Biblioteket",
-      participants: "3",
-      max: "5",
-      photo:
-        "https://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/images/UniLinkLogo.png",
-    }
-  ]);
+  // const [events, setEvents] = useState([
+  //   {
+  //     id: 1,
+  //     title: "Fysikplugg",
+  //     time: "14:00",
+  //     place: "Biblioteket",
+  //     participants: "3",
+  //     max: "5",
+  //     photo:
+  //       "https://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/images/UniLinkLogo.png",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Fysikplugg 2",
+  //     time: "14:00",
+  //     place: "Biblioteket",
+  //     participants: "3",
+  //     max: "5",
+  //     photo:
+  //       "https://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/images/UniLinkLogo.png",
+  //   }
+  // ]);
 
   const [message, setMessage] = useState("");
 
@@ -67,17 +67,20 @@ export default function Page() {
         filters.append("eventLocation", searchLocation);
       }
   
-      const url = `http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events?${filters.toString()}`;
+      const url = `http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events/?${filters.toString()}`;
   
-      console.log(url);
+    
   
       const response = await fetch(url, {
         method: "GET",
       },);
+
+      console.log(url);
   
       const data = await response.json();
   
       if (data.success) {
+        console.log("SUCCESS");
         setEvents(data.data);
       }
   
@@ -257,7 +260,7 @@ const styles = StyleSheet.create({
           width: 70,
           height: 70,
           borderRadius: 35,
-          backgroundColor: "#7393D8",
+          backgroundColor: "#9370DB",
           justifyContent: "center",
           alignItems: "center",
           elevation: 8, // Android shadow

@@ -47,11 +47,12 @@ export default function Create_Event() {
               userId: userId,
               eventName: title,
               eventDescription: description,
-              eventDate: time?.toISOString(),
-              eventImage: null,
+              eventDate: time
+                          ? time.toISOString().slice(0, 19).replace("T", " ")
+                          : null,
+              eventImage: "no image",
               eventLocation: place,
               maxParticipants: Number(participants),
-              currentParticipants: 1
             },
           
             user: {
@@ -62,6 +63,13 @@ export default function Create_Event() {
       );
       //eventId, userId, eventName, eventDescription, eventDate, eventImage, eventLocation, maxParticipants, currentParticipants
       const data = await response.json();
+
+      setMessage("");
+      setTime(null);
+      setdescription("");
+      setparticipants("");
+      setplace("");
+      settitle("");
 
       console.log("SERVER RESPONSE:");
       console.log(JSON.stringify(data, null, 2))
@@ -90,7 +98,7 @@ export default function Create_Event() {
 
           <TextInput
             placeholder="Title"
-            placeholderTextColor={"#222"}
+            placeholderTextColor={"grey"}
             value={title}
             onChangeText={settitle}
             style={globalStyles.textbox}
@@ -98,7 +106,7 @@ export default function Create_Event() {
 
           <TextInput
             placeholder="Description"
-            placeholderTextColor={"#222"}
+            placeholderTextColor={"grey"}
             value={description}
             onChangeText={setdescription}
             style={globalStyles.textbox}
@@ -136,7 +144,7 @@ export default function Create_Event() {
 
           <TextInput
             placeholder="Place"
-            placeholderTextColor={"#222"}
+            placeholderTextColor={"grey"}
             value={place}
             onChangeText={setplace}
             style={globalStyles.textbox}
@@ -149,7 +157,7 @@ export default function Create_Event() {
             }}
             keyboardType="numeric"
             placeholder="Participants"
-            placeholderTextColor={"#222"}
+            placeholderTextColor={"grey"}
             maxLength={2}
             style={globalStyles.textbox}
           />
@@ -192,8 +200,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
 
-    backgroundColor: "#1D3557",
-    marginTop: -20,
+    backgroundColor: "#9370DB",
+    marginTop: 50,
     marginBottom: 40,
   },
 
@@ -269,7 +277,7 @@ const styles = StyleSheet.create({
 
   placeholderText: {
     fontSize: 15,
-    color: "#999",
+    color: "grey",
   },
   errorText: {
     color: "red",
