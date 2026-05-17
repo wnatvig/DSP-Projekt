@@ -10,6 +10,7 @@ const { createEvent,
         leaveEvent,
         getFilterEvent,
         getFilteredEventPage,
+        getFilterSuggestions,
         getParticipantCount,
         eventCount,
 
@@ -222,7 +223,58 @@ router.get("/filteredEvents/page", async (req, res) => {
     }
 });
 
+//Get filter suggestions
+router.get("/suggestions", async (req, res) => {
+    try {
+        const filterType = req.query.type;
+        const searchText = req.query.q;
 
+        const suggestions = await getFilterSuggestions(filterType, searchText);
+
+        res.status(200).json({
+            success: true,
+            data: suggestions
+        });
+    } catch(err) {
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+    }
+});
+
+//Get filtered event page
+router.get("/filteredEvents/page", async (req, res) => {
+    try {
+        const user = {
+            username: req.query.username
+        };
+
+        const filters = {
+            eventName: req.query.eventName,
+            eventDate: req.query.eventDate,
+            eventLocation: req.query.eventLocation,
+            maxParticipants: req.query.maxParticipants
+        };
+
+        const pageSize = req.query.pageSize || 10;
+        const page = req.query.page || 1;
+
+        const events = await getFilteredEventPage(user, filters, pageSize, page);
+
+        res.status(200).json({
+            success: true,
+            data: events,
+            page: Number(page),
+            pageSize: Number(pageSize)
+        });
+    } catch(err) {
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+    }
+});
 
 router.get("/:eventId/count", async (req, res) => {
     try {

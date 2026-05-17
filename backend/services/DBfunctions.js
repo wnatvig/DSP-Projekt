@@ -158,6 +158,45 @@ async function getUserEvents(user) {
     return events;
 }
 
+async function getFilterSuggestions(filterType, searchText) {
+    if (!searchText) {
+        return [];
+    }
+
+    const filterColumns = {
+        eventName: {
+            table: 'events',
+            column: 'eventName'
+        },
+        eventLocation: {
+            table: 'events',
+            column: 'eventLocation'
+        },
+        username: {
+            table: 'users',
+            column: 'username'
+        }
+    };
+
+        const selectedFilter = filterColumns[filterType];
+
+    if (!selectedFilter) {
+        throw new Error('Invalid filter type');
+    }
+
+    const filterQuery = `
+        SELECT DISTINCT ${selectedFilter.column} AS suggestion
+        FROM ${selectedFilter.table}
+        WHERE ${selectedFilter.column} LIKE ?
+        ORDER BY ${selectedFilter.column} ASC
+        LIMIT 5
+    `;
+
+    const [suggestions] = await db.promise().query(filterQuery, [`${searchText}%`]);
+
+    return suggestions.map(row => row.suggestion);
+}
+
 async function getFilteredEventPage(user, filters = {}, pageSize = 10, page = 1) {
     const limit = Number(pageSize);
     const currentPage = Number(page);
@@ -265,6 +304,7 @@ module.exports = {
     getFilterEvent,
     getParticipantCount,
     getFilteredEventPage,
+    getFilterSuggestions,
 }
 
 
