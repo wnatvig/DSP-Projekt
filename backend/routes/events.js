@@ -13,6 +13,7 @@ const { createEvent,
         getFilterSuggestions,
         getParticipantCount,
         eventCount,
+        getMessages,
 
 } = require('../services/DBfunctions');
 
@@ -288,6 +289,17 @@ router.get("/:eventId/count", async (req, res) => {
             success: false,
             error: err.message
         });
+    }
+});
+
+
+router.get("/:eventId/messages", async (req, res) =>{
+    try{
+        const messages = await getMessages({ eventId: req.params.eventId });
+        res.status(200).json(messages);
+    } 
+    catch(err){
+        res.status(500).json({success: false, error: err.message});
     }
 });
 

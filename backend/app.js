@@ -1,3 +1,5 @@
+const { saveMessage } = require('./services/DBfunctions');
+
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -39,15 +41,20 @@ io.on('connection', (socket) => {
     });
 
     // skicka msg
-    socket.on('sendMessage', ({ roomId, userId, username, textString, timeSent }) => {
-    io.to(roomId).emit('receiveMessage', {
-        messageId: Date.now().toString(),
-        eventId: roomId,
-        userId,
-        username,
-        textString,
-        timeSent
-    });
+    socket.on('sendMessage', async ({ roomId, userId, username, textString, timeSent }) => {
+    try {
+        const saved = await saveMessage({ eventId: roomId, userId, textString });
+        io.to(roomId).emit('receiveMessage', {
+            messageId: saved.insertId.toString(),
+            eventId: roomId,
+            userId,
+            username,
+            textString,
+            timeSent
+        });
+    } catch (err) {
+        console.error('Failed to save message:', err);
+    }
 });
     socket.on('leaveRoom', (roomId) => {
     socket.leave(roomId);

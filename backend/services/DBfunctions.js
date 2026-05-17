@@ -286,6 +286,23 @@ async function getFilterEvent(user, filters = {}) {
     return filteredEvents;
 }
 
+async function saveMessage({ eventId, userId, textString }) {
+    const query = 'INSERT INTO eventChats (eventId, userId, textString) VALUES (?,?,?)';
+    const result = await db.promise().query(query, [eventId, userId, textString]);
+    return result[0];
+}
+
+async function getMessages(event) {
+    const query = 
+        `SELECT eventChats.messageId, eventChats.eventId, eventChats.userId, users.username, eventChats.textString, eventChats.timeSent
+        FROM eventChats
+        LEFT JOIN users ON eventChats.userId = users.userId
+        WHERE eventChats.eventId = ?
+        ORDER BY eventChats.timeSent ASC`;
+    const result = await db.promise().query(query, [event.eventId]);
+    return result[0];
+}
+
 //söka efter ett event från dess namn
 async function searchEvent(eventname){
     
@@ -305,6 +322,8 @@ module.exports = {
     getParticipantCount,
     getFilteredEventPage,
     getFilterSuggestions,
+    saveMessage,
+    getMessages
 }
 
 
