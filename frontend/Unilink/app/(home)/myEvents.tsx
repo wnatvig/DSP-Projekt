@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/expo";
+import { useUser, useAuth } from "@clerk/expo";
 import { useRouter, Stack } from "expo-router";
 import { Text, View, Pressable, StyleSheet, ScrollView } from "react-native";
 import { useState, useEffect } from "react";
@@ -16,7 +16,7 @@ type EventItem = {
 };
 
 export default function MyEventsPage() {
-  const { user } = useUser();
+  const { userId } = useAuth();
   const router = useRouter();
 
   // const [events, setEvents] = useState<EventItem[]>([]);
@@ -46,10 +46,10 @@ export default function MyEventsPage() {
 
   const fetchMyEvents = async () => {
     try {
-      if (!user?.id) return;
+      if (!userId) return;
 
       const response = await fetch(
-        `http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events/my/${user.id}`,
+        `http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/events/my/${userId}`,
         {
           method: "GET",
         }
@@ -67,7 +67,7 @@ export default function MyEventsPage() {
 
   useEffect(() => {
     fetchMyEvents();
-  }, [user?.id]);
+  }, [userId]);
 
   return (
     <>

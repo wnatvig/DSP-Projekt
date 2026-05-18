@@ -36,7 +36,7 @@ export default function EventDetailPage() {
       try {
         console.log("trying to fetch");
         const response = await fetch(
-          "http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events//:eventId/participants",{
+          `http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/events//:eventId/participants`,{
             method: "GET",
           },
         );

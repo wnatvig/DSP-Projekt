@@ -11,13 +11,12 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 type EventItem = {
-  id: number;
-  title: string;
-  time: string;
-  place: string;
-  participants: string;
-  max: string;
-  photo: string;
+  eventId: number;
+  eventName: string;
+  eventDate: string;
+  eventLocation: string;
+  maxParticipants: number;
+  eventImage?: string;
 };
 
 export default function Page() {
@@ -56,7 +55,7 @@ export default function Page() {
   const [searchLocation, setSearchLocation] = useState("");
 
   const fetchEvent = async () => {
-    try {
+        try {
       const filters = new URLSearchParams();
   
       if (searchTitle) {
@@ -67,7 +66,7 @@ export default function Page() {
         filters.append("eventLocation", searchLocation);
       }
   
-      const url = `http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events/?${filters.toString()}`;
+      const url = `http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/events/filteredEvents/page?${filters.toString()}`;
   
     
   
@@ -78,6 +77,7 @@ export default function Page() {
       console.log(url);
   
       const data = await response.json();
+      console.log(JSON.stringify(data))
   
       if (data.success) {
         console.log("SUCCESS");
@@ -146,7 +146,7 @@ export default function Page() {
         {events.length > 0 ? (
           events.map((event) => (
             <Pressable
-              key={event.id}
+              key={event.eventId}
               style={({ pressed }) => [
                 styles.card,
                 pressed && { opacity: 0.7 },
@@ -155,20 +155,20 @@ export default function Page() {
                 router.push({
                   pathname: "/event/[id]",
                   params: {
-                    id: event.id,
-                    title: event.title,
-                    time: event.time,
-                    place: event.place,
-                    participants: event.participants,
-                    max: event.max,
-                    photo: event.photo,
+                    id: event.eventId,
+                    title: event.eventName,
+                    time: event.eventDate,
+                    place: event.eventLocation,
+                    participants: event.maxParticipants, //CURRENT
+                    max: event.maxParticipants,
+                    photo: event.eventImage,
                   },
                 })
               }
             >
-              <Text style={styles.cardTitle}>{event.title}</Text>
-              <Text style={styles.cardText}>Tid: {event.time}</Text>
-              <Text style={styles.cardText}>Plats: {event.place}</Text>
+              <Text style={styles.cardTitle}>{event.eventName}</Text>
+              <Text style={styles.cardText}>Tid: {event.eventDate}</Text>
+              <Text style={styles.cardText}>Plats: {event.eventLocation}</Text>
             </Pressable>
           ))
         ) : (

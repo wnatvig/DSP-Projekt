@@ -38,7 +38,7 @@ export default function EventDetailPage() {
       try {
         console.log("trying to fetch");
         const response = await fetch(
-          `http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events/${id}/participants`,{
+          `http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/events/${id}/participants`,{
             method: "GET",
           },
         );
@@ -50,7 +50,7 @@ export default function EventDetailPage() {
         }else{
           console.log("error");
         }
-        setAllParticipants(data.data);
+        //setAllParticipants(data.data);
         setMessage("Events updated");
       } catch (error) {
         setMessage("server error");
@@ -66,7 +66,7 @@ export default function EventDetailPage() {
       try {
         console.log("hejsan");
         const response = await fetch(
-          `http://ec2-13-48-148-97.eu-north-1.compute.amazonaws.com:3000/events/${id}/leave`,
+          `http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/events/${id}/leave`,
           {
             method: "DELETE",
             headers: {
