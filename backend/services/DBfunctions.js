@@ -151,8 +151,9 @@ async function getUserEvents(user) {
 
     const events = [];
 
-    for (const event of eventResults[0]) {
-        const event = await getEvent({ eventId: event.eventId });
+    for (const participantEvent of eventResults[0]) {
+        const event = await getEvent({ eventId: participantEvent.eventId });
+        events.push(event);
     }
     
     return events;
@@ -216,10 +217,15 @@ async function getFilteredEventPage(user, filters = {}, pageSize = 10, page = 1)
         FROM events
         JOIN users
             ON events.userId = users.userId
-        WHERE users.username = ?
+        WHERE 1 = 1
     `;
 
-    const values = [user.username];
+    const values = [];
+
+    if (user && user.username) {
+        filterQuery += ' AND users.username = ?';
+        values.push(user.username);
+    }
 
     if (filters.eventName) {
         filterQuery += ' AND events.eventName = ?';
