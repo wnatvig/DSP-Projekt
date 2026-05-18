@@ -9,8 +9,9 @@ import {
   Pressable,
 } from "react-native";
 import { useAuth, useClerk } from "@clerk/expo";
+import {fetchUser} from "../../lib/fetchUser"
 
-type User = {
+export type User = {
   username: string;
   gender: string;
   languages: string;
@@ -33,40 +34,23 @@ const ProfileScreen = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 🚫 Don't run if auth isn't ready
-    if (!isSignedIn) return;
-
-    const fetchUser = async () => {
+    if (!isSignedIn || !userId) return;
+  
+    async function loadUser() {
       try {
-        const token = await getToken();
-
-        const res = await fetch(`http://ec2-51-20-64-6.eu-north-1.compute.amazonaws.com:3000/users/${userId}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch user");
-        }
-
-        const data = await res.json();
-        if(data.success){
-          console.log("Successss");
-          console.log(JSON.stringify(data, null, 2));
-        }
-        setUser(data.data);
+        const userData = await fetchUser(userId!);
+  
+        setUser(userData!);
+  
       } catch (err) {
         console.log("Error fetching user:", err);
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchUser();
-  }, [isSignedIn]); // ✅ important dependency
-
+    }
+  
+    loadUser();
+  }, [isSignedIn, userId]);
   // 🔄 Loading state
   if (loading) {
     return (

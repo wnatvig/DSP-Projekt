@@ -13,6 +13,8 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useAuth, useUser } from "@clerk/expo";
 import { socket, API_URL } from "../../lib/socket";
+import {fetchUser} from "../../lib/fetchUser"
+import {User} from "../(home)/profile"
 
 type ChatParams = {
   eventId?: string;
@@ -38,12 +40,27 @@ export default function Chat() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
+  const [username, setUserName] = useState("");
 
   useEffect(() => {
     if (!eventId) {
       setLoading(false);
       return;
     }
+
+    async function loadUserName() {
+      try {
+        const userData = await fetchUser(userId!);
+  
+        setUserName(userData!.username);
+  
+      } catch (err) {
+        console.log("Error fetching user:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadUserName();
 
     async function loadOldMessages() {
       try {
@@ -91,7 +108,7 @@ export default function Chat() {
     socket.emit("sendMessage", {
       roomId: eventId,
       userId: userId,
-      username: null,
+      username: username,
       textString: message.trim(),
       timeSent: Date.now(),
     });
