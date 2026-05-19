@@ -4,7 +4,7 @@ const router = express.Router();
 const { createEvent,
         getEvent,
         removeEvent,
-        getEvents,
+        getUserEvents,
         getParticipants,
         joinEvent,
         leaveEvent,
@@ -14,6 +14,7 @@ const { createEvent,
         getParticipantCount,
         eventCount,
         getMessages,
+        getEventParticipants,
 
 } = require('../services/DBfunctions');
 
@@ -126,6 +127,24 @@ router.get("/filteredEvents/page", async (req, res) => {
     }
 });
 
+//Get events joined by user
+router.get("/user/:userId/events", async (req, res) => {
+    try {
+        const events = await getUserEvents({ userId: req.params.userId });
+
+        res.status(200).json({
+            success: true,
+            data: events
+        });
+    } catch(err) {
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+    }
+});
+
+
 //Get event
 router.get("/:eventId", async (req, res) => {
     try {
@@ -153,7 +172,7 @@ router.get("/:eventId", async (req, res) => {
 //Get participants
 router.get("/:eventId/participants", async (req, res) => {
     try {
-        const result = await getParticipants({ eventId: req.params.eventId });
+        const result = await getEventParticipants({ eventId: req.params.eventId });
 
         res.status(200).json({
             success: true,
